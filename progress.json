@@ -1,0 +1,178 @@
+{
+  "project": "Competitive Programming Society (CPS) PICT Website",
+  "version": "1.0.0",
+  "lastUpdated": "2026-11-02",
+  "theme": "Technical Green and Black Theme (#080B09 bg, #141C17 card, #22C55E accent, #26352B border)",
+  "features": {
+    "F01": {
+      "title": "Homepage and CPS Introduction",
+      "status": "completed",
+      "acceptanceCriteria": {
+        "navigationBar": "Verified. Contains official CPS logo (/images/cps-logo.jpeg) with object-fit: contain and original proportions, title CPS PICT, working navigation links (Home, Topic of the Week, About CPS, Events & Sessions, Learning Resources), and Join CPS CTA button opening official Google Form in new tab.",
+        "heroSection": "Verified. Features Competitive Programming Society PICT, Learn.Practice.Compete philosophy badge, mission statement, CTAs, CP Terminal with C++ fast I/O and Accepted status, and official CPS crest emblem.",
+        "aboutSection": "Verified. Covers What is CPS, Algorithmic Learning, Problem-Solving Intuition, Competitive Programming, and dual pathways (Beginner Track vs Advanced Track).",
+        "topicOfTheWeekPreview": "Verified. Prominently displays Week 1 topic, title, short description, publication date, difficulty, 3 key concept summaries, and CTA leading to full F02 Topic page.",
+        "upcomingEventsSection": "Verified. Shows scheduled session cards with title, date, time, venue, speaker, and registration CTA; includes tabbed toggle to previous sessions and a clean, meaningful empty state.",
+        "quickAccessSection": "Verified. Provides direct resource access cards for Topic of the Week, Curated Problem Sets, LeetCode POTD, OA Practice Sheets, and Previous Sessions.",
+        "announcementsSection": "Verified. Displays official notices with priority tags, publication dates, and action links, plus a graceful empty state toggle.",
+        "achievementsSection": "Verified. Highlights authentic PICT milestones (ACM-ICPC Regionals qualification, alumni at product tech firms, peer mentorship, campus contest hosting) without fabricated statistics.",
+        "footer": "Verified. Displays official CPS logo, mission, philosophy badge, navigation links, contest platform links, Join CPS card, and copyright notice © 2026 Competitive Programming Society, PICT. All rights reserved.",
+        "responsiveLayout": "Verified on desktop, laptop, tablet, and mobile viewports with hamburger menu and zero horizontal overflow."
+      },
+      "completedTasks": [
+        "Audit existing codebase against PRD v1.0",
+        "Implement technical Green and Black design system (#080B09, #101713, #141C17, #22C55E, #16A34A, #F1F5F2, #A1ADA4, #26352B)",
+        "Configure typography with Space Grotesk, Inter, and JetBrains Mono",
+        "Implement responsive Navbar with official logo and Join CPS CTA",
+        "Implement Hero section with CP terminal and Learn.Practice.Compete philosophy",
+        "Implement About CPS section with 3 pillars and dual beginner/advanced tracks",
+        "Implement Topic of the Week preview linking directly to F02 page",
+        "Implement Upcoming Events & Sessions with registration links and empty state",
+        "Implement Quick Access section with separated data structure",
+        "Implement Announcements with graceful empty state handling",
+        "Implement verified CPS Achievements without invented metrics",
+        "Implement Footer with branding, copyright, and platform links"
+      ],
+      "remainingTasks": [],
+      "filesModified": [
+        "index.html",
+        "src/styles/theme.css",
+        "src/styles/navbar.css",
+        "src/styles/hero.css",
+        "src/styles/sections.css",
+        "src/styles/footer.css",
+        "src/styles/modal.css",
+        "src/components/Navbar.jsx",
+        "src/components/HeroSection.jsx",
+        "src/components/IntroSection.jsx",
+        "src/components/WeeklyTopicSection.jsx",
+        "src/components/EventsSection.jsx",
+        "src/components/QuickAccessSection.jsx",
+        "src/components/AnnouncementsSection.jsx",
+        "src/components/AchievementsSection.jsx",
+        "src/components/Footer.jsx",
+        "src/data/events.js",
+        "src/data/quickAccess.js",
+        "src/data/announcements.js",
+        "src/data/achievements.js",
+        "src/App.jsx",
+        "src/index.css"
+      ]
+    },
+    "F02": {
+      "title": "Topic of the Week",
+      "status": "completed",
+      "acceptanceCriteria": {
+        "pageStructure": "Verified. Full dedicated Topic of the Week page containing: 1. Topic title & description, 2. Week number & publication date, 3. Introduction & motivation, 4. Important concepts & algorithmic patterns with code snippets, 5. Prerequisites, 6. Curated learning resources (Articles, Videos, Notes), 7. Topic-wise problem set, 8. Additional practice recommendations.",
+        "curatedProblemSet": "Verified. 13 curated problems arranged by difficulty (Easy, Medium, Hard) with Platform tag, problem title, algorithmic tags, difficulty badge, Solve link, Editorial link, and interactive collapsible hint.",
+        "dataSeparation": "Verified. Topic content cleanly isolated in src/data/topicOfTheWeek.js separate from UI rendering logic.",
+        "designConsistency": "Verified. Matches green and black technical palette with Space Grotesk headings, Inter body text, and JetBrains Mono code snippets.",
+        "navigation": "Verified. Accessible via #topic-of-the-week hash, Navbar link, Hero CTA, and WeeklyTopicSection on Homepage, with working Back to Homepage button."
+      },
+      "completedTasks": [
+        "Create dedicated topicOfTheWeek.js data file with complete 8-part PRD schema",
+        "Implement 4 core algorithmic patterns with syntax-highlighted C++ code snippets",
+        "Curate learning resources across CP-Algorithms, USACO Guide, NeetCode, and Errichto",
+        "Implement 13-problem curated ladder across LeetCode, Codeforces, SPOJ, and CSES",
+        "Implement difficulty tier tabs (All, Easy, Medium, Hard)",
+        "Implement interactive collapsible hints for problems",
+        "Implement TopicOfTheWeekPage component and route handling in App.jsx",
+        "Verify browser interactions, hint expansion, and navigation back to Home"
+      ],
+      "remainingTasks": [],
+      "filesModified": [
+        "src/data/topicOfTheWeek.js",
+        "src/components/TopicOfTheWeekPage.jsx",
+        "src/components/WeeklyTopicSection.jsx",
+        "src/styles/sections.css",
+        "src/App.jsx"
+      ]
+    },
+    "F03": {
+      "title": "Weekly Topic Archive",
+      "status": "pending",
+      "completedTasks": [],
+      "remainingTasks": [
+        "Chronological archive view",
+        "Status indicators (published vs upcoming)",
+        "Search and filter by category"
+      ],
+      "filesModified": []
+    },
+    "F04": {
+      "title": "Global Search",
+      "status": "pending",
+      "completedTasks": [],
+      "remainingTasks": [
+        "Global navigation search bar/modal",
+        "Cross-entity indexing (topics, problems, sessions, events)",
+        "Type and difficulty filtering"
+      ],
+      "filesModified": []
+    },
+    "F05": {
+      "title": "LeetCode POTD Archive",
+      "status": "pending",
+      "completedTasks": [],
+      "remainingTasks": [
+        "Calendar/monthly archive view",
+        "Video preview cards",
+        "Difficulty and topic filters"
+      ],
+      "filesModified": []
+    },
+    "F06": {
+      "title": "Events & CPS Sessions Hub",
+      "status": "pending",
+      "completedTasks": [],
+      "remainingTasks": [
+        "Full calendar view",
+        "Session recording player/embeds",
+        "Presentation decks & practice sheets archive"
+      ],
+      "filesModified": []
+    },
+    "F07": {
+      "title": "Must-Try LeetCode / OA Sheet",
+      "status": "pending",
+      "completedTasks": [],
+      "remainingTasks": [
+        "Company-wise categorization",
+        "Difficulty and topic filters",
+        "External problem links and editorials"
+      ],
+      "filesModified": []
+    },
+    "F08": {
+      "title": "About CPS & Team",
+      "status": "pending",
+      "completedTasks": [],
+      "remainingTasks": [
+        "Core team showcase",
+        "Faculty mentors",
+        "Approved member photographs and social handles"
+      ],
+      "filesModified": []
+    },
+    "F09": {
+      "title": "CPS Registration",
+      "status": "completed",
+      "acceptanceCriteria": {
+        "ctaPresence": "Verified. Join CPS buttons present in Navbar, Hero, and Footer.",
+        "redirection": "Verified. Redirects to official Google Form (https://forms.gle/sk8J5zMgAmK5jpB79) in a new tab."
+      },
+      "completedTasks": [
+        "Integrate official Google Form link across all navigation and CTA components",
+        "Configure target='_blank' rel='noopener noreferrer' for security"
+      ],
+      "remainingTasks": [],
+      "filesModified": [
+        "src/components/Navbar.jsx",
+        "src/components/HeroSection.jsx",
+        "src/components/EventsSection.jsx",
+        "src/components/Footer.jsx",
+        "src/data/events.js"
+      ]
+    }
+  }
+}
