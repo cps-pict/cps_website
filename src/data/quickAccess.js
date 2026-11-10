@@ -7,7 +7,7 @@ export const quickAccessItems = [
     description:
       "Delve into interval algorithms, two pointers, sliding window invariants, and binary search on answer with curated problems.",
     actionLabel: "Explore Week 1 Guide",
-    actionType: "explore-topic"
+    to: "/totw"
   },
   {
     id: "qa-problem-sets",
@@ -17,18 +17,17 @@ export const quickAccessItems = [
     description:
       "Hand-picked problems across Codeforces, LeetCode, CSES, and AtCoder designed to build intuition without getting stuck in tutorial hell.",
     actionLabel: "View Problems in Topic",
-    actionType: "explore-topic"
+    to: "/totw"
   },
   {
     id: "qa-potd",
     tag: "Daily Practice",
-    title: "LeetCode POTD",
-    tagline: "Problem of the Day discussion",
+    title: "LeetCode POTD Hub",
+    tagline: "Problem of the Day archive & discussion",
     description:
       "Maintain your solving streak with optimal O(1) space tricks, multi-language solutions, and post-contest discussions in our community.",
-    actionLabel: "Open LeetCode POTD",
-    isExternal: true,
-    href: "https://leetcode.com/problemset/all/"
+    actionLabel: "Explore Resources & POTD",
+    to: "/resources"
   },
   {
     id: "qa-oa",
@@ -37,9 +36,8 @@ export const quickAccessItems = [
     tagline: "Company Online Assessment patterns",
     description:
       "Specialized problem collections mirroring the algorithmic patterns and constraints tested by product companies visiting PICT.",
-    actionLabel: "Access via CPS Cohort",
-    isExternal: true,
-    href: "https://forms.gle/sk8J5zMgAmK5jpB79"
+    actionLabel: "Open Must-Try OA Sheet",
+    to: "/sheet"
   },
   {
     id: "qa-sessions",
@@ -48,7 +46,7 @@ export const quickAccessItems = [
     tagline: "Workshop recordings, slides & notes",
     description:
       "Revisit past workshop decks, contest editorials, and algorithmic problem debriefs conducted by CPS mentors.",
-    actionLabel: "Browse Sessions",
-    actionType: "scroll-events"
+    actionLabel: "Browse Events & Sessions",
+    to: "/events"
   }
 ];

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { topicOfTheWeek } from "../data/topicOfTheWeek";
 
 export default function TopicOfTheWeekPage({ onBackToHome }) {
@@ -24,9 +25,9 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
       <div className="container">
         {/* Navigation Breadcrumb */}
         <div className="topic-page-back-nav">
-          <button type="button" className="topic-page-back-btn" onClick={onBackToHome}>
+          <Link to="/" className="topic-page-back-btn" onClick={onBackToHome}>
             ← Back to Homepage
-          </button>
+          </Link>
         </div>
 
         {/* 1 & 2: Header, Title, Week, Publication Date */}

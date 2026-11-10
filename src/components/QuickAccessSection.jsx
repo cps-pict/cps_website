@@ -1,15 +1,7 @@
+import { Link } from "react-router-dom";
 import { quickAccessItems } from "../data/quickAccess";
 
-export default function QuickAccessSection({ onExploreTopic }) {
-  const handleAction = (item) => {
-    if (item.actionType === "explore-topic") {
-      onExploreTopic();
-    } else if (item.actionType === "scroll-events") {
-      const el = document.getElementById("events");
-      if (el) el.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
+export default function QuickAccessSection() {
   return (
     <section className="quick-access-section section-padding" id="resources">
       <div className="container">
@@ -41,13 +33,12 @@ export default function QuickAccessSection({ onExploreTopic }) {
                     {item.actionLabel} ↗
                   </a>
                 ) : (
-                  <button
-                    type="button"
+                  <Link
+                    to={item.to || "/"}
                     className="quick-card-action"
-                    onClick={() => handleAction(item)}
                   >
                     {item.actionLabel} →
-                  </button>
+                  </Link>
                 )}
               </div>
             </div>

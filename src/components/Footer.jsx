@@ -1,6 +1,7 @@
+import { Link } from "react-router-dom";
 import { OFFICIAL_REGISTRATION_LINK } from "../data/events";
 
-export default function Footer({ onNavigate }) {
+export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -35,32 +36,37 @@ export default function Footer({ onNavigate }) {
 
           {/* Col 2: Navigation Links */}
           <div className="footer-col">
-            <h4>Navigation</h4>
+            <h4>Platform Pages</h4>
             <ul className="footer-links">
               <li>
-                <span className="footer-link" onClick={() => onNavigate("home", "#hero")}>
+                <Link to="/" className="footer-link">
                   Home
-                </span>
+                </Link>
               </li>
               <li>
-                <span className="footer-link" onClick={() => onNavigate("topic-of-the-week", "#topic-of-the-week")}>
+                <Link to="/totw" className="footer-link">
                   Topic of the Week
-                </span>
+                </Link>
               </li>
               <li>
-                <span className="footer-link" onClick={() => onNavigate("home", "#about")}>
-                  About CPS
-                </span>
+                <Link to="/sheet" className="footer-link">
+                  Must-Try OA Sheet
+                </Link>
               </li>
               <li>
-                <span className="footer-link" onClick={() => onNavigate("home", "#events")}>
-                  Events & Sessions
-                </span>
-              </li>
-              <li>
-                <span className="footer-link" onClick={() => onNavigate("home", "#resources")}>
+                <Link to="/resources" className="footer-link">
                   Learning Resources
-                </span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/events" className="footer-link">
+                  Events & Sessions
+                </Link>
+              </li>
+              <li>
+                <Link to="/about" className="footer-link">
+                  About CPS & Team
+                </Link>
               </li>
             </ul>
           </div>
@@ -101,46 +107,59 @@ export default function Footer({ onNavigate }) {
               </li>
               <li>
                 <a
-                  href="https://pict.edu"
+                  href="https://atcoder.jp"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="footer-link"
                 >
-                  PICT Official Portal ↗
+                  AtCoder ↗
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://cp-algorithms.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-link"
+                >
+                  CP-Algorithms ↗
                 </a>
               </li>
             </ul>
           </div>
 
-          {/* Col 4: Join CTA */}
+          {/* Col 4: Community & Join */}
           <div className="footer-col">
-            <h4>Join CPS</h4>
+            <h4>Community</h4>
+            <p className="footer-subtext">
+              Join the student competitive programming community at PICT. Open to all branches and skill levels.
+            </p>
             <div className="footer-cta-box">
-              <h5>Become a Member</h5>
-              <p>
-                Access weekly algorithmic discussion cohorts, peer problem ladders, and mock coding rounds.
-              </p>
               <a
                 href={OFFICIAL_REGISTRATION_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-primary"
-                style={{ width: "100%", justifyContent: "center", fontSize: "0.8125rem" }}
+                id="footer-join-cps-btn"
+                style={{ width: "100%", justifyContent: "center" }}
               >
-                CPS Registration Form ↗
+                Join CPS PICT ↗
               </a>
             </div>
+            <p className="footer-note">
+              Official registration form for new cohorts, contest teams & updates.
+            </p>
           </div>
         </div>
 
-        {/* Bottom Bar: Copyright & Location */}
+        {/* Footer Bottom Bar */}
         <div className="footer-bottom">
-          <p>© {currentYear} Competitive Programming Society (CPS), PICT. All rights reserved.</p>
-          <div className="footer-bottom-links">
-            <span>Pune Institute of Computer Technology, Dhankawadi, Pune</span>
-            <a href="#hero" onClick={() => onNavigate("home", "#hero")}>
-              Back to Top ↑
-            </a>
+          <div className="footer-copy">
+            © {currentYear} Competitive Programming Society, Pune Institute of Computer Technology.
+            All rights reserved.
+          </div>
+          <div className="footer-disclaimer">
+            Built by CPS PICT • Designed for algorithmic learners
           </div>
         </div>
       </div>

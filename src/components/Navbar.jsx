@@ -1,20 +1,20 @@
 import { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
 import { OFFICIAL_REGISTRATION_LINK } from "../data/events";
 
-export default function Navbar({ currentView, onNavigate }) {
+export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { label: "Home", view: "home", hash: "#home" },
-    { label: "Topic of the Week", view: "topic-of-the-week", hash: "#topic-of-the-week" },
-    { label: "About CPS", view: "home", hash: "#about" },
-    { label: "Events & Sessions", view: "home", hash: "#events" },
-    { label: "Learning Resources", view: "home", hash: "#resources" }
+    { label: "Home", to: "/" },
+    { label: "Topic of the Week", to: "/totw" },
+    { label: "OA Sheet", to: "/sheet" },
+    { label: "Resources", to: "/resources" },
+    { label: "Events & Sessions", to: "/events" },
+    { label: "About CPS", to: "/about" }
   ];
 
-  const handleLinkClick = (e, item) => {
-    e.preventDefault();
-    onNavigate(item.view, item.hash);
+  const closeMenu = () => {
     setMobileMenuOpen(false);
   };
 
@@ -22,13 +22,10 @@ export default function Navbar({ currentView, onNavigate }) {
     <header className="navbar">
       <div className="container navbar-container">
         {/* Brand / Logo */}
-        <a
-          href="#home"
+        <Link
+          to="/"
           className="navbar-brand"
-          onClick={(e) => {
-            e.preventDefault();
-            onNavigate("home", "#home");
-          }}
+          onClick={closeMenu}
           aria-label="Competitive Programming Society PICT Home"
         >
           <div className="navbar-logo-wrap">
@@ -44,27 +41,20 @@ export default function Navbar({ currentView, onNavigate }) {
             </span>
             <span className="navbar-subtitle">Competitive Programming Society</span>
           </div>
-        </a>
+        </Link>
 
         {/* Desktop Navigation Links */}
         <nav className="navbar-links" aria-label="Main Navigation">
-          {navItems.map((item) => {
-            const isActive =
-              item.view === "topic-of-the-week"
-                ? currentView === "topic-of-the-week"
-                : currentView === "home" && window.location.hash === item.hash;
-
-            return (
-              <a
-                key={item.label}
-                href={item.hash}
-                className={`nav-link ${isActive ? "active" : ""}`}
-                onClick={(e) => handleLinkClick(e, item)}
-              >
-                {item.label}
-              </a>
-            );
-          })}
+          {navItems.map((item) => (
+            <NavLink
+              key={item.label}
+              to={item.to}
+              end={item.to === "/"}
+              className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+            >
+              {item.label}
+            </NavLink>
+          ))}
         </nav>
 
         {/* Action Controls */}
@@ -106,17 +96,16 @@ export default function Navbar({ currentView, onNavigate }) {
       {/* Mobile Drawer */}
       <div className={`mobile-drawer ${mobileMenuOpen ? "open" : ""}`} aria-label="Mobile Navigation">
         {navItems.map((item) => (
-          <a
+          <NavLink
             key={item.label}
-            href={item.hash}
-            className={`mobile-nav-link ${
-              currentView === item.view ? "active" : ""
-            }`}
-            onClick={(e) => handleLinkClick(e, item)}
+            to={item.to}
+            end={item.to === "/"}
+            className={({ isActive }) => `mobile-nav-link ${isActive ? "active" : ""}`}
+            onClick={closeMenu}
           >
             <span>{item.label}</span>
             <span style={{ opacity: 0.5 }}>→</span>
-          </a>
+          </NavLink>
         ))}
         <div className="mobile-drawer-footer">
           <a

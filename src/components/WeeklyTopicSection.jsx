@@ -1,6 +1,7 @@
+import { Link } from "react-router-dom";
 import { topicOfTheWeek } from "../data/topicOfTheWeek";
 
-export default function WeeklyTopicSection({ onExploreTopic }) {
+export default function WeeklyTopicSection() {
   return (
     <section className="weekly-topic-section section-padding" id="topic-of-week">
       <div className="container">
@@ -49,14 +50,13 @@ export default function WeeklyTopicSection({ onExploreTopic }) {
             </div>
 
             <div>
-              <button
-                type="button"
+              <Link
+                to="/totw"
                 className="btn btn-primary"
                 id="explore-topic-btn"
-                onClick={onExploreTopic}
               >
                 Explore Full Topic Guide & Problem Set ({topicOfTheWeek.problemSet.length}) →
-              </button>
+              </Link>
             </div>
           </div>
         </div>
