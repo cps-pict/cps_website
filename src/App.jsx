@@ -1,90 +1,42 @@
-import { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import HeroSection from "./components/HeroSection";
-import IntroSection from "./components/IntroSection";
-import WeeklyTopicSection from "./components/WeeklyTopicSection";
-import EventsSection from "./components/EventsSection";
-import QuickAccessSection from "./components/QuickAccessSection";
-import AnnouncementsSection from "./components/AnnouncementsSection";
-import AchievementsSection from "./components/AchievementsSection";
-import TopicOfTheWeekPage from "./components/TopicOfTheWeekPage";
 import Footer from "./components/Footer";
+import ScrollToTop from "./components/ScrollToTop";
+
+// Pages
+import HomePage from "./pages/HomePage";
+import TopicOfTheWeekPage from "./components/TopicOfTheWeekPage";
+import OASheetPage from "./pages/OASheetPage";
+import ResourcesPage from "./pages/ResourcesPage";
+import EventsPage from "./pages/EventsPage";
+import AboutPage from "./pages/AboutPage";
+import NotFoundPage from "./pages/NotFoundPage";
+
 import "./App.css";
 
 function App() {
-  const [currentView, setCurrentView] = useState("home");
-
-  // Synchronize hash routing on mount and hash changes
-  useEffect(() => {
-    const handleHash = () => {
-      const hash = window.location.hash.replace("#", "");
-      if (hash === "topic-of-the-week") {
-        setCurrentView("topic-of-the-week");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } else {
-        setCurrentView("home");
-        if (hash && hash !== "home") {
-          setTimeout(() => {
-            const el = document.getElementById(hash);
-            if (el) el.scrollIntoView({ behavior: "smooth" });
-          }, 50);
-        }
-      }
-    };
-
-    handleHash();
-    window.addEventListener("hashchange", handleHash);
-    return () => window.removeEventListener("hashchange", handleHash);
-  }, []);
-
-  const handleNavigate = (view, hash) => {
-    if (view === "topic-of-the-week") {
-      setCurrentView("topic-of-the-week");
-      window.history.pushState(null, "", "#topic-of-the-week");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      setCurrentView("home");
-      window.history.pushState(null, "", hash || "#home");
-      if (hash && hash !== "#home") {
-        setTimeout(() => {
-          const el = document.querySelector(hash);
-          if (el) el.scrollIntoView({ behavior: "smooth" });
-        }, 50);
-      } else {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-    }
-  };
-
   return (
-    <>
-      <Navbar currentView={currentView} onNavigate={handleNavigate} />
+    <BrowserRouter>
+      <ScrollToTop />
+      <Navbar />
 
-      {currentView === "home" ? (
-        <main className="app-main">
-          <HeroSection
-            onExploreTopic={() => handleNavigate("topic-of-the-week", "#topic-of-the-week")}
-            onExploreResources={() => handleNavigate("home", "#resources")}
-          />
-          <IntroSection />
-          <WeeklyTopicSection
-            onExploreTopic={() => handleNavigate("topic-of-the-week", "#topic-of-the-week")}
-          />
-          <EventsSection />
-          <QuickAccessSection
-            onExploreTopic={() => handleNavigate("topic-of-the-week", "#topic-of-the-week")}
-          />
-          <AnnouncementsSection />
-          <AchievementsSection />
-        </main>
-      ) : (
-        <main className="app-main">
-          <TopicOfTheWeekPage onBackToHome={() => handleNavigate("home", "#home")} />
-        </main>
-      )}
+      <main className="app-main">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/totw" element={<TopicOfTheWeekPage />} />
+          <Route path="/topic-of-the-week" element={<Navigate to="/totw" replace />} />
+          <Route path="/sheet" element={<OASheetPage />} />
+          <Route path="/sheets" element={<Navigate to="/sheet" replace />} />
+          <Route path="/oa-sheet" element={<Navigate to="/sheet" replace />} />
+          <Route path="/resources" element={<ResourcesPage />} />
+          <Route path="/events" element={<EventsPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </main>
 
-      <Footer onNavigate={handleNavigate} />
-    </>
+      <Footer />
+    </BrowserRouter>
   );
 }
 

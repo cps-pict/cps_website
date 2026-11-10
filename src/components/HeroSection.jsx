@@ -1,6 +1,7 @@
+import { Link } from "react-router-dom";
 import { OFFICIAL_REGISTRATION_LINK } from "../data/events";
 
-export default function HeroSection({ onExploreTopic, onExploreResources }) {
+export default function HeroSection() {
   return (
     <section className="hero-section" id="hero">
       <div className="container hero-grid">
@@ -28,23 +29,29 @@ export default function HeroSection({ onExploreTopic, onExploreResources }) {
           </p>
 
           <div className="hero-ctas">
-            <button
-              type="button"
+            <Link
+              to="/totw"
               className="btn btn-primary"
               id="hero-explore-topic-btn"
-              onClick={onExploreTopic}
             >
               Explore Topic of the Week →
-            </button>
+            </Link>
 
-            <button
-              type="button"
+            <Link
+              to="/sheet"
+              className="btn btn-secondary"
+              id="hero-explore-sheet-btn"
+            >
+              Must-Try OA Sheet
+            </Link>
+
+            <Link
+              to="/resources"
               className="btn btn-secondary"
               id="hero-explore-resources-btn"
-              onClick={onExploreResources}
             >
               Learning Resources
-            </button>
+            </Link>
 
             <a
               href={OFFICIAL_REGISTRATION_LINK}
@@ -90,49 +97,68 @@ export default function HeroSection({ onExploreTopic, onExploreResources }) {
             </div>
           </div>
 
-          {/* CP Terminal Window */}
-          <div className="terminal-card" aria-hidden="true">
+          {/* Terminal Box */}
+          <div className="terminal-window">
             <div className="terminal-header">
               <div className="terminal-dots">
                 <span className="dot dot-red"></span>
                 <span className="dot dot-yellow"></span>
                 <span className="dot dot-green"></span>
               </div>
-              <span className="terminal-title">solution.cpp • C++20 Fast I/O</span>
-              <span className="terminal-verdict">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                ACCEPTED
-              </span>
+              <div className="terminal-title">cps_pict_solution.cpp — C++20</div>
+              <div className="terminal-status-badge">Fast I/O Active</div>
             </div>
 
-            <pre className="terminal-code">
-              <code>
-                <span className="code-comment">// CPS PICT - Learn. Practice. Compete.</span>{'\n'}
-                <span className="code-keyword">#include</span> &lt;bits/stdc++.h&gt;{'\n'}
-                <span className="code-keyword">using namespace</span> std;{'\n\n'}
-                <span className="code-type">void</span> <span className="code-fn">solve</span>() &#123;{'\n'}
-                {'  '}<span className="code-type">long long</span> n, k; cin &gt;&gt; n &gt;&gt; k;{'\n'}
-                {'  '}<span className="code-type">vector</span>&lt;<span className="code-type">long long</span>&gt; a(n);{'\n'}
-                {'  '}<span className="code-keyword">for</span> (<span className="code-type">auto</span> &amp;x : a) cin &gt;&gt; x;{'\n'}
-                {'  '}<span className="code-comment">// Binary Search on Answer Space: O(N log(max_val))</span>{'\n'}
-                {'  '}<span className="code-type">auto</span> <span className="code-fn">check</span> = [&amp;](<span className="code-type">long long</span> mid) -&gt; <span className="code-type">bool</span> &#123;{'\n'}
-                {'    '}<span className="code-type">long long</span> cnt = <span className="code-num">0</span>, cur = <span className="code-num">0</span>;{'\n'}
-                {'    '}<span className="code-keyword">for</span> (<span className="code-type">auto</span> x : a) &#123;{'\n'}
-                {'      '}<span className="code-keyword">if</span> (x &gt; mid) <span className="code-keyword">return</span> <span className="code-keyword">false</span>;{'\n'}
-                {'      '}<span className="code-keyword">if</span> (cur + x &gt; mid) &#123; cnt++; cur = x; &#125;{'\n'}
-                {'      '}<span className="code-keyword">else</span> cur += x;{'\n'}
-                {'    '}&#125;{'\n'}
-                {'    '}<span className="code-keyword">return</span> cnt + <span className="code-num">1</span> &lt;= k;{'\n'}
-                {'  '}&#125;;{'\n'}
-                &#125;
-              </code>
-            </pre>
+            <div className="terminal-body">
+              <div className="terminal-code">
+                <div className="code-line">
+                  <span className="line-num">1</span>
+                  <span className="keyword">#include</span> <span className="string">&lt;bits/stdc++.h&gt;</span>
+                </div>
+                <div className="code-line">
+                  <span className="line-num">2</span>
+                  <span className="keyword">using namespace</span> std;
+                </div>
+                <div className="code-line">
+                  <span className="line-num">3</span>
+                  <span className="comment">// CPS PICT — Competitive Programming Foundation</span>
+                </div>
+                <div className="code-line">
+                  <span className="line-num">4</span>
+                  <span className="type">int</span> <span className="func">main</span>() &#123;
+                </div>
+                <div className="code-line">
+                  <span className="line-num">5</span>
+                  &nbsp;&nbsp;ios_base::<span className="func">sync_with_stdio</span>(<span className="keyword">false</span>);
+                </div>
+                <div className="code-line">
+                  <span className="line-num">6</span>
+                  &nbsp;&nbsp;cin.<span className="func">tie</span>(<span className="keyword">NULL</span>);
+                </div>
+                <div className="code-line">
+                  <span className="line-num">7</span>
+                  &nbsp;&nbsp;cout &lt;&lt; <span className="string">"Learn. Practice. Compete.\\n"</span>;
+                </div>
+                <div className="code-line">
+                  <span className="line-num">8</span>
+                  &nbsp;&nbsp;<span className="keyword">return</span> 0;
+                </div>
+                <div className="code-line">
+                  <span className="line-num">9</span>
+                  &#125;
+                </div>
+              </div>
 
-            <div className="terminal-footer-meta">
-              <span>Time: 18ms • Memory: 4.2MB</span>
-              <span>Complexity: O(N log M)</span>
+              {/* Execution Feedback */}
+              <div className="terminal-verdict-bar">
+                <div className="verdict-tag verdict-accepted">
+                  <span className="verdict-icon">✓</span>
+                  <span>Accepted (15ms, 4.2 MB)</span>
+                </div>
+                <div className="verdict-tag verdict-platform">
+                  <span>CF Rating: 1900+ Target</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
