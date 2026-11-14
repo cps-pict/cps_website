@@ -1,7 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
+import FeatureGate from "./components/FeatureGate";
 
 // Pages
 import HomePage from "./pages/HomePage";
@@ -17,25 +19,69 @@ import "./App.css";
 function App() {
   return (
     <BrowserRouter>
-      <ScrollToTop />
-      <Navbar />
+      <AuthProvider>
+        <ScrollToTop />
+        <Navbar />
 
-      <main className="app-main">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/totw" element={<TopicOfTheWeekPage />} />
-          <Route path="/topic-of-the-week" element={<Navigate to="/totw" replace />} />
-          <Route path="/sheet" element={<OASheetPage />} />
-          <Route path="/sheets" element={<Navigate to="/sheet" replace />} />
-          <Route path="/oa-sheet" element={<Navigate to="/sheet" replace />} />
-          <Route path="/resources" element={<ResourcesPage />} />
-          <Route path="/events" element={<EventsPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </main>
+        <main className="app-main">
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <FeatureGate feature="home" pageName="Homepage">
+                  <HomePage />
+                </FeatureGate>
+              }
+            />
+            <Route
+              path="/totw"
+              element={
+                <FeatureGate feature="totw" pageName="Topic of the Week">
+                  <TopicOfTheWeekPage />
+                </FeatureGate>
+              }
+            />
+            <Route path="/topic-of-the-week" element={<Navigate to="/totw" replace />} />
+            <Route
+              path="/sheet"
+              element={
+                <FeatureGate feature="sheet" pageName="Must-Try OA Sheet">
+                  <OASheetPage />
+                </FeatureGate>
+              }
+            />
+            <Route path="/sheets" element={<Navigate to="/sheet" replace />} />
+            <Route path="/oa-sheet" element={<Navigate to="/sheet" replace />} />
+            <Route
+              path="/resources"
+              element={
+                <FeatureGate feature="resources" pageName="Learning Resources">
+                  <ResourcesPage />
+                </FeatureGate>
+              }
+            />
+            <Route
+              path="/events"
+              element={
+                <FeatureGate feature="events" pageName="Events & Sessions">
+                  <EventsPage />
+                </FeatureGate>
+              }
+            />
+            <Route
+              path="/about"
+              element={
+                <FeatureGate feature="about" pageName="About CPS">
+                  <AboutPage />
+                </FeatureGate>
+              }
+            />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </main>
 
-      <Footer />
+        <Footer />
+      </AuthProvider>
     </BrowserRouter>
   );
 }

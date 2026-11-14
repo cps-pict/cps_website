@@ -1987,3 +1987,177 @@
   gap: 1rem;
   flex-wrap: wrap;
 }
+
+
+/* ==========================================================================
+   Topic of the Week Progress & Problem Completion Styles
+   ========================================================================== */
+
+/* Progress Card */
+.totw-progress-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.totw-progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.totw-progress-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.totw-progress-badge {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent-primary);
+}
+
+.totw-progress-title-wrap h3 {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.highlight-green {
+  color: var(--accent-primary);
+}
+
+.totw-progress-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.progress-percent-number {
+  font-family: var(--font-mono);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  line-height: 1;
+}
+
+.progress-percent-label {
+  font-size: 0.6875rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-top: 0.2rem;
+}
+
+/* Progress Bar */
+.totw-progress-bar-bg {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.totw-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #16A34A 0%, #22C55E 100%);
+  border-radius: var(--radius-full);
+  transition: width 300ms ease;
+}
+
+.totw-progress-footer {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+.totw-user-status {
+  color: var(--text-secondary);
+}
+
+.totw-user-status strong {
+  color: var(--accent-primary);
+}
+
+.totw-guest-prompt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Checkmark Button on Problem Card */
+.problem-check-btn {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border-light);
+  color: #080B09;
+  font-size: 0.875rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  margin-right: 0.75rem;
+  padding: 0;
+}
+
+.problem-check-btn:hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-card);
+}
+
+.problem-check-btn.checked {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: #080B09;
+}
+
+.problem-card-completed {
+  border-color: rgba(34, 197, 94, 0.4);
+  background: rgba(20, 28, 23, 0.85);
+}
+
+.problem-title-done {
+  color: var(--text-secondary);
+  text-decoration: line-through;
+  opacity: 0.85;
+}
+
+.problem-title-line {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.35rem;
+}
+
+.problem-done-tag {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-sm);
+  background: var(--accent-muted);
+  border: 1px solid var(--accent-border);
+  color: var(--accent-primary);
+}
