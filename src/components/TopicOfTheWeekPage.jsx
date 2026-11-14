@@ -1,16 +1,115 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
+import { supabase } from "../lib/supabase";
 import { topicOfTheWeek } from "../data/topicOfTheWeek";
 
 export default function TopicOfTheWeekPage({ onBackToHome }) {
   const [activeTier, setActiveTier] = useState("all");
   const [openHints, setOpenHints] = useState({});
+  const [completedMap, setCompletedMap] = useState({});
+  const [savingId, setSavingId] = useState(null);
+
+  const { user, signInWithGoogle } = useAuth();
+
+  // Load user's problem completion progress from Supabase
+  useEffect(() => {
+    async function loadProgress() {
+      if (!user) {
+        setCompletedMap({});
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from("problem_progress")
+          .select("problem_id, is_completed")
+          .eq("user_id", user.id);
+
+        if (error) throw error;
+
+        const map = {};
+        data?.forEach((row) => {
+          if (row.is_completed) {
+            map[row.problem_id] = true;
+          }
+        });
+        setCompletedMap(map);
+      } catch (err) {
+        console.error("Failed to load problem progress:", err.message);
+      }
+    }
+
+    loadProgress();
+  }, [user]);
 
   const toggleHint = (id) => {
     setOpenHints((prev) => ({
       ...prev,
       [id]: !prev[id]
     }));
+  };
+
+  // Toggle problem completion status
+  const handleToggleCompleted = async (problemId) => {
+    if (!user) {
+      const proceed = window.confirm(
+        "Sign in with your Google account to track and save your problem completions?"
+      );
+      if (proceed) {
+        signInWithGoogle();
+      }
+      return;
+    }
+
+    const isCurrentlyDone = !!completedMap[problemId];
+    const newStatus = !isCurrentlyDone;
+
+    // Optimistic UI update
+    setCompletedMap((prev) => {
+      const next = { ...prev };
+      if (newStatus) {
+        next[problemId] = true;
+      } else {
+        delete next[problemId];
+      }
+      return next;
+    });
+
+    setSavingId(problemId);
+
+    try {
+      if (newStatus) {
+        const { error } = await supabase.from("problem_progress").upsert({
+          user_id: user.id,
+          problem_id: problemId,
+          is_completed: true,
+          updated_at: new Date().toISOString()
+        });
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from("problem_progress")
+          .delete()
+          .eq("user_id", user.id)
+          .eq("problem_id", problemId);
+        if (error) throw error;
+      }
+    } catch (err) {
+      console.error("Error saving progress to Supabase:", err.message);
+      // Revert optimistic update on failure
+      setCompletedMap((prev) => {
+        const next = { ...prev };
+        if (isCurrentlyDone) {
+          next[problemId] = true;
+        } else {
+          delete next[problemId];
+        }
+        return next;
+      });
+    } finally {
+      setSavingId(null);
+    }
   };
 
   const filteredProblems =
@@ -20,12 +119,20 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
           (p) => p.difficultyTier.toLowerCase() === activeTier.toLowerCase()
         );
 
+  const totalProblems = topicOfTheWeek.problemSet.length;
+  const completedCount = topicOfTheWeek.problemSet.filter((p) => !!completedMap[p.id]).length;
+  const progressPercent = totalProblems > 0 ? Math.round((completedCount / totalProblems) * 100) : 0;
+
   return (
     <div className="topic-page">
       <div className="container">
         {/* Navigation Breadcrumb */}
         <div className="topic-page-back-nav">
-          <Link to="/" className="topic-page-back-btn" onClick={onBackToHome}>
+          <Link
+            to="/"
+            className="topic-page-back-btn"
+            onClick={onBackToHome ? onBackToHome : undefined}
+          >
             ← Back to Homepage
           </Link>
         </div>
@@ -33,12 +140,8 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
         {/* 1 & 2: Header, Title, Week, Publication Date */}
         <header className="topic-page-header">
           <div className="topic-page-meta-row">
-            <span className="week-badge">
-              Week {topicOfTheWeek.week} Focus
-            </span>
-            <span className="topic-difficulty-badge">
-              {topicOfTheWeek.difficulty}
-            </span>
+            <span className="week-badge">Week {topicOfTheWeek.week} Focus</span>
+            <span className="topic-difficulty-badge">{topicOfTheWeek.difficulty}</span>
             <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", fontFamily: "var(--font-mono)" }}>
               Published: {topicOfTheWeek.publicationDate}
             </span>
@@ -54,7 +157,7 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
         {/* 3: Introduction & Motivation */}
         <section className="topic-page-section">
           <h2 className="topic-section-heading">
-            <span>Introduction & Motivation</span>
+            <span>Introduction &amp; Motivation</span>
           </h2>
           <div className="topic-motivation-box">
             <p>{topicOfTheWeek.introduction}</p>
@@ -103,20 +206,25 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
             <span>Curated Learning Resources</span>
           </h2>
           <div className="resources-columns">
-            {topicOfTheWeek.learningResources.map((resCat, idx) => (
-              <div key={idx} className="resource-category-card">
-                <h4>{resCat.category}</h4>
-                <ul className="resource-item-list">
-                  {resCat.items.map((item, itemIdx) => (
+            {topicOfTheWeek.learningResources.map((group, idx) => (
+              <div key={idx} className="resource-group-box">
+                <div className="resource-group-header">
+                  <h3>{group.category}</h3>
+                </div>
+                <ul className="resource-items-list">
+                  {group.items.map((item, itemIdx) => (
                     <li key={itemIdx}>
                       <a
                         href={item.url}
-                        target={item.url.startsWith("http") ? "_blank" : undefined}
-                        rel={item.url.startsWith("http") ? "noopener noreferrer" : undefined}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="resource-item-link"
                       >
-                        <div>
-                          <strong>{item.title}</strong>
+                        <div className="resource-link-title">
+                          <span style={{ color: "var(--accent-primary)", marginRight: "0.4rem" }}>
+                            ▹
+                          </span>
+                          {item.title}
                           <div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
                             {item.platform}
                           </div>
@@ -131,15 +239,58 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
           </div>
         </section>
 
-        {/* 7: Topic-Wise Problem Set */}
+        {/* 7: Topic-Wise Problem Set with Checkmarks & Progress */}
         <section className="topic-page-section" id="problem-set">
+          {/* Progress Summary Card */}
+          <div className="totw-progress-card">
+            <div className="totw-progress-header">
+              <div className="totw-progress-title-wrap">
+                <span className="totw-progress-badge">Student Progress</span>
+                <h3>
+                  {user ? (
+                    <>
+                      Completed: <span className="highlight-green">{completedCount}</span> / {totalProblems} problems
+                    </>
+                  ) : (
+                    "Track Your Problem Solving"
+                  )}
+                </h3>
+              </div>
+              <div className="totw-progress-stat">
+                <span className="progress-percent-number">{progressPercent}%</span>
+                <span className="progress-percent-label">Completed</span>
+              </div>
+            </div>
+
+            {/* Visual Bar */}
+            <div className="totw-progress-bar-bg" role="progressbar" aria-valuenow={progressPercent} aria-valuemin="0" aria-valuemax="100">
+              <div className="totw-progress-bar-fill" style={{ width: `${progressPercent}%` }}></div>
+            </div>
+
+            <div className="totw-progress-footer">
+              {user ? (
+                <span className="totw-user-status">
+                  ✓ Signed in as <strong>{user.email}</strong> • Syncing with Supabase
+                </span>
+              ) : (
+                <div className="totw-guest-prompt">
+                  <span>Sign in with Google to check off problems and track your progress across devices:</span>
+                  <button type="button" className="btn btn-secondary nav-google-btn" onClick={signInWithGoogle} style={{ padding: "0.25rem 0.65rem", fontSize: "0.75rem" }}>
+                    Sign in with Google
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Ladder Controls */}
           <div className="problem-set-controls">
             <div>
               <h2 className="topic-section-heading" style={{ marginBottom: "0.25rem" }}>
-                <span>Curated Problem Set ({filteredProblems.length})</span>
+                <span>Curated Problem Ladder ({filteredProblems.length})</span>
               </h2>
               <p style={{ fontSize: "0.8125rem", color: "var(--text-secondary)" }}>
-                Arranged by difficulty ladder. Solve sequentially to build algorithmic intuition.
+                Arranged by difficulty ladder. Solve sequentially and mark problems as completed.
               </p>
             </div>
 
@@ -175,6 +326,7 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
             </div>
           </div>
 
+          {/* Problem Items List */}
           <div className="problem-ladder-list">
             {filteredProblems.map((prob) => {
               const diffClass =
@@ -185,13 +337,35 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
                   : "diff-hard";
 
               const isHintOpen = !!openHints[prob.id];
+              const isDone = !!completedMap[prob.id];
+              const isSaving = savingId === prob.id;
 
               return (
-                <div key={prob.id} className="problem-row-card">
+                <div
+                  key={prob.id}
+                  className={`problem-row-card ${isDone ? "problem-card-completed" : ""}`}
+                >
                   <div className="problem-main-row">
+                    {/* Checkmark Button */}
+                    <button
+                      type="button"
+                      className={`problem-check-btn ${isDone ? "checked" : ""}`}
+                      onClick={() => handleToggleCompleted(prob.id)}
+                      disabled={isSaving}
+                      title={isDone ? "Mark as Incomplete" : "Mark as Completed"}
+                      aria-label={`Mark ${prob.name} as ${isDone ? "incomplete" : "completed"}`}
+                    >
+                      {isDone ? "✓" : ""}
+                    </button>
+
                     <div className="problem-left-info">
-                      <span className="problem-platform-tag">{prob.platform}</span>
-                      <span className="problem-title">{prob.name}</span>
+                      <div className="problem-title-line">
+                        <span className="problem-platform-tag">{prob.platform}</span>
+                        <span className={`problem-title ${isDone ? "problem-title-done" : ""}`}>
+                          {prob.name}
+                        </span>
+                        {isDone && <span className="problem-done-tag">Solved ✓</span>}
+                      </div>
                       <div className="problem-tags-row">
                         {prob.tags.map((t, idx) => (
                           <span key={idx} className="problem-tag-pill">
@@ -252,17 +426,16 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
           </div>
         </section>
 
-        {/* 8: Additional Practice Resources */}
+        {/* 8: Additional Practice Recommendations */}
         <section className="topic-page-section">
           <h2 className="topic-section-heading">
-            <span>Additional Practice Recommendations</span>
+            <span>Additional Practice &amp; Next Steps</span>
           </h2>
-          <div className="topic-motivation-box" style={{ borderLeftColor: "var(--border-light)" }}>
+          <div className="topic-motivation-box">
             <ul className="additional-tips-list">
-              {topicOfTheWeek.additionalResources.map((res, idx) => (
+              {topicOfTheWeek.additionalResources.map((tip, idx) => (
                 <li key={idx}>
-                  <span style={{ color: "var(--accent-primary)" }}>•</span>
-                  <span>{res}</span>
+                  <span style={{ color: "var(--accent-primary)" }}>▹</span> {tip}
                 </li>
               ))}
             </ul>
