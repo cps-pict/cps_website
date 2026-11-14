@@ -123,6 +123,13 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
   const completedCount = topicOfTheWeek.problemSet.filter((p) => !!completedMap[p.id]).length;
   const progressPercent = totalProblems > 0 ? Math.round((completedCount / totalProblems) * 100) : 0;
 
+  const scrollToProblemSet = () => {
+    const el = document.getElementById("problem-set");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div className="topic-page">
       <div className="container">
@@ -152,6 +159,38 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
 
           <h1 className="topic-page-title">{topicOfTheWeek.title}</h1>
           <p className="topic-page-desc">{topicOfTheWeek.shortDescription}</p>
+
+          {/* Quick Jump Action Bar */}
+          <div className="topic-header-quick-bar">
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={scrollToProblemSet}
+              id="jump-to-sheet-btn"
+            >
+              <span>Jump to Problem Ladder ({totalProblems} Problems)</span>
+              <span>↓</span>
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => {
+                const el = document.getElementById("core-patterns");
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              Core Algorithmic Patterns
+            </button>
+            <div className="topic-quick-stats">
+              {user ? (
+                <span>
+                  Your Progress: <strong>{completedCount}/{totalProblems}</strong> ({progressPercent}%)
+                </span>
+              ) : (
+                <span>{totalProblems} Curated Problems • Easy to Hard</span>
+              )}
+            </div>
+          </div>
         </header>
 
         {/* 3: Introduction & Motivation */}
@@ -182,7 +221,7 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
         </section>
 
         {/* 4: Important Concepts & Algorithmic Patterns */}
-        <section className="topic-page-section">
+        <section className="topic-page-section" id="core-patterns">
           <h2 className="topic-section-heading">
             <span>Core Algorithmic Patterns</span>
           </h2>
@@ -442,6 +481,21 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
           </div>
         </section>
       </div>
+
+      {/* Floating Quick Jump Button */}
+      <button
+        type="button"
+        className="floating-jump-btn"
+        onClick={scrollToProblemSet}
+        title="Scroll down to Problem Ladder"
+        aria-label="Scroll down to Problem Ladder"
+      >
+        <span>Problem Ladder</span>
+        <span className="floating-jump-badge">
+          {completedCount > 0 ? `${completedCount}/${totalProblems}` : `${totalProblems}Q`}
+        </span>
+        <span className="floating-jump-arrow">↓</span>
+      </button>
     </div>
   );
 }
