@@ -2288,12 +2288,23 @@
    Topic of the Week: 4-Section Restructuring & Code Templates
    ========================================================================== */
 
+.totw-nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
 .totw-section-nav {
   display: flex;
   align-items: center;
   gap: 2rem;
-  border-bottom: 1px solid var(--border);
-  margin-top: 0.5rem;
+  border-bottom: none;
+  margin-top: 0;
   margin-bottom: 0;
   padding: 0;
   overflow-x: auto;
@@ -2302,6 +2313,140 @@
 
 .totw-section-nav::-webkit-scrollbar {
   display: none;
+}
+
+/* Header Jump to Ladder Button */
+.btn-jump-ladder {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--accent-border);
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  padding: 0.45rem 0.95rem;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  margin-bottom: 0.35rem;
+}
+
+.btn-jump-ladder:hover {
+  background: var(--accent-primary);
+  color: #080B09;
+  border-color: var(--accent-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.25);
+}
+
+.btn-jump-ladder .ladder-jump-icon {
+  font-size: 0.875rem;
+  color: var(--accent-primary);
+}
+
+.btn-jump-ladder:hover .ladder-jump-icon {
+  color: #080B09;
+}
+
+.btn-jump-ladder .ladder-jump-badge {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-sm);
+  background: var(--accent-muted);
+  color: var(--accent-primary);
+  border: 1px solid var(--accent-border);
+  transition: all var(--transition-fast);
+}
+
+.btn-jump-ladder:hover .ladder-jump-badge {
+  background: #080B09;
+  color: var(--accent-primary);
+  border-color: #080B09;
+}
+
+.btn-jump-ladder .ladder-jump-arrow {
+  font-size: 0.875rem;
+  color: var(--accent-primary);
+  transition: transform var(--transition-fast), color var(--transition-fast);
+}
+
+.btn-jump-ladder:hover .ladder-jump-arrow {
+  color: #080B09;
+  transform: translateY(2px);
+}
+
+/* Quick In-Page Subnav */
+.totw-quick-subnav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding: 0.25rem 0 0.5rem 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.totw-quick-subnav::-webkit-scrollbar {
+  display: none;
+}
+
+.quick-subnav-label {
+  font-size: 0.6875rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-right: 0.25rem;
+  flex-shrink: 0;
+}
+
+.quick-subnav-btn {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.quick-subnav-btn:hover {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-color: var(--border-light);
+  transform: translateY(-1px);
+}
+
+.quick-subnav-btn.quick-subnav-primary {
+  background: var(--accent-muted);
+  border-color: var(--accent-border);
+  color: var(--accent-primary);
+  font-weight: 700;
+}
+
+.quick-subnav-btn.quick-subnav-primary:hover {
+  background: var(--accent-primary);
+  color: #080B09;
+  border-color: var(--accent-primary);
+}
+
+/* Smooth Scroll Offsets for Sticky Navbar */
+#problem-ladder,
+#topic-main-sections,
+.totw-editorial-disclosure,
+.totw-editorial-section {
+  scroll-margin-top: 5.5rem;
 }
 
 .totw-section-tab {
@@ -2602,7 +2747,7 @@
    ========================================================================== */
 
 .totw-editorial-section {
-  margin-bottom: 2.25rem;
+  margin-bottom: 1rem;
 }
 
 .totw-editorial-section .section-title-wrap {
@@ -2616,30 +2761,43 @@
   margin: 0.35rem 0 0 0;
 }
 
-/* Accessible Editorial Disclosure (<details> / <summary>) */
+/* Accessible Editorial Disclosure (<details> / <summary>) - Flat Rectangular Box */
 .totw-editorial-disclosure {
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 0.5rem;
-  transition: border-color var(--transition-fast);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 0;
+  overflow: hidden;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.totw-editorial-disclosure:hover {
+  border-color: var(--accent-border);
+}
+
+.totw-editorial-disclosure:active {
+  border-color: var(--accent-primary);
 }
 
 .totw-editorial-disclosure[open] {
-  border-bottom-color: var(--border-light);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 16px rgba(34, 197, 94, 0.1), inset 0 0 0 1px rgba(34, 197, 94, 0.15);
 }
 
 .totw-disclosure-summary {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 0;
+  padding: 0.875rem 1.25rem;
   cursor: pointer;
   list-style: none;
   font-family: var(--font-heading);
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: var(--text-primary);
   user-select: none;
-  transition: color var(--transition-fast);
+  background: transparent;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
 .totw-disclosure-summary::-webkit-details-marker {
@@ -2647,13 +2805,23 @@
 }
 
 .totw-disclosure-summary:hover {
+  background: rgba(34, 197, 94, 0.04);
   color: var(--accent-primary);
+}
+
+.totw-disclosure-summary:active {
+  background: rgba(34, 197, 94, 0.14);
 }
 
 .totw-disclosure-summary:focus-visible {
   outline: 2px solid var(--accent-primary);
-  outline-offset: 4px;
-  border-radius: var(--radius-sm);
+  outline-offset: -2px;
+}
+
+.totw-editorial-disclosure[open] > .totw-disclosure-summary {
+  background: rgba(34, 197, 94, 0.08);
+  border-bottom: 1px solid var(--accent-border);
+  color: var(--accent-primary);
 }
 
 .summary-title {
@@ -2668,13 +2836,17 @@
   transition: transform var(--transition-fast), color var(--transition-fast);
 }
 
+.totw-disclosure-summary:hover .summary-icon {
+  color: var(--accent-primary);
+}
+
 .totw-editorial-disclosure[open] > .totw-disclosure-summary .summary-icon {
   transform: rotate(180deg);
   color: var(--accent-primary);
 }
 
 .totw-disclosure-body {
-  padding: 0.5rem 0 1.5rem 0;
+  padding: 1.25rem 1.25rem 1.5rem;
   font-size: 0.9375rem;
   line-height: 1.75;
   color: var(--text-secondary);
@@ -2682,6 +2854,10 @@
 
 .totw-disclosure-body p {
   margin: 0 0 1rem 0;
+}
+
+.totw-disclosure-body p:last-child {
+  margin-bottom: 0;
 }
 
 .totw-disclosure-body code {
@@ -2699,7 +2875,7 @@
   font-size: 1rem;
   font-weight: 600;
   color: var(--text-primary);
-  margin: 1.5rem 0 0.75rem 0;
+  margin: 1.25rem 0 0.65rem 0;
 }
 
 .editorial-list {
@@ -2721,10 +2897,11 @@
 
 .editorial-example-box {
   background: var(--bg-secondary);
+  border: 1px solid var(--border);
   border-left: 3px solid var(--accent-primary);
-  padding: 1.25rem 1.5rem;
-  margin: 1rem 0 1.25rem 0;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 1rem 1.25rem;
+  margin: 0.85rem 0 1rem 0;
+  border-radius: var(--radius-sm);
 }
 
 .editorial-steps-list {
@@ -2760,24 +2937,42 @@
 }
 
 /* ==========================================================================
-   Learning Resources: Four Collapsible Groups
+   Learning Resources: Four Collapsible Groups - Flat Rectangular Boxes
    ========================================================================== */
 
 .totw-resource-accordion {
   display: flex;
   flex-direction: column;
-  border-top: 1px solid var(--border);
+  gap: 0.75rem;
+  border-top: none;
 }
 
 .totw-resource-disclosure {
-  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.totw-resource-disclosure:hover {
+  border-color: var(--accent-border);
+}
+
+.totw-resource-disclosure:active {
+  border-color: var(--accent-primary);
+}
+
+.totw-resource-disclosure[open] {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 16px rgba(34, 197, 94, 0.1), inset 0 0 0 1px rgba(34, 197, 94, 0.15);
 }
 
 .totw-resource-summary {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.9rem 0;
+  padding: 0.875rem 1.25rem;
   cursor: pointer;
   list-style: none;
   font-family: var(--font-heading);
@@ -2785,7 +2980,8 @@
   font-weight: 600;
   color: var(--text-primary);
   user-select: none;
-  transition: color var(--transition-fast);
+  background: transparent;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
 .totw-resource-summary::-webkit-details-marker {
@@ -2793,13 +2989,23 @@
 }
 
 .totw-resource-summary:hover {
+  background: rgba(34, 197, 94, 0.04);
   color: var(--accent-primary);
+}
+
+.totw-resource-summary:active {
+  background: rgba(34, 197, 94, 0.14);
 }
 
 .totw-resource-summary:focus-visible {
   outline: 2px solid var(--accent-primary);
-  outline-offset: 4px;
-  border-radius: var(--radius-sm);
+  outline-offset: -2px;
+}
+
+.totw-resource-disclosure[open] > .totw-resource-summary {
+  background: rgba(34, 197, 94, 0.08);
+  border-bottom: 1px solid var(--accent-border);
+  color: var(--accent-primary);
 }
 
 .res-group-title {
@@ -2814,13 +3020,17 @@
   transition: transform var(--transition-fast), color var(--transition-fast);
 }
 
+.totw-resource-summary:hover .res-chevron {
+  color: var(--accent-primary);
+}
+
 .totw-resource-disclosure[open] > .totw-resource-summary .res-chevron {
   transform: rotate(180deg);
   color: var(--accent-primary);
 }
 
 .totw-resource-body {
-  padding: 0.25rem 0 1.25rem 0;
+  padding: 1.25rem 1.25rem 1.5rem;
 }
 
 .res-group-intro {

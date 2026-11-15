@@ -165,8 +165,30 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
       setActiveSection(secId);
       setActiveTier("all");
     }
-    const el = document.getElementById("topic-main-sections");
+    const el = document.getElementById("problem-ladder") || document.getElementById("topic-main-sections");
     if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const scrollToLadder = () => {
+    if (activeSection !== "binary-search") {
+      setActiveSection("binary-search");
+    }
+    setTimeout(() => {
+      const el = document.getElementById("problem-ladder") || document.getElementById("topic-main-sections");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 40);
+  };
+
+  const scrollToEditorial = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      if (el.tagName === "DETAILS" && !el.open) {
+        el.open = true;
+      }
       el.scrollIntoView({ behavior: "smooth" });
     }
   };
@@ -187,192 +209,215 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
             {topicOfTheWeek.contributors || "Jayraj Rathi, Aadarsh Nichit, Siddharth Chiplunkar"}
           </div>
 
-          {/* Section Navigation Tabs: Exactly 2 Tabs (No emojis, matching section typography) */}
-          <nav className="totw-section-nav" aria-label="Topic Sections Navigation">
-            {TOPIC_SECTIONS.map((sec) => {
-              const isSelected = activeSection === sec.id;
-              return (
-                <button
-                  key={sec.id}
-                  type="button"
-                  className={`totw-section-tab ${isSelected ? "active" : ""}`}
-                  onClick={() => {
-                    setActiveSection(sec.id);
-                    setActiveTier("all");
-                  }}
-                  id={`tab-${sec.id}`}
-                >
-                  {sec.title}
-                </button>
-              );
-            })}
-          </nav>
+          {/* Section Navigation Tabs & Direct Ladder Jump Button */}
+          <div className="totw-nav-row">
+            <nav className="totw-section-nav" aria-label="Topic Sections Navigation">
+              {TOPIC_SECTIONS.map((sec) => {
+                const isSelected = activeSection === sec.id;
+                return (
+                  <button
+                    key={sec.id}
+                    type="button"
+                    className={`totw-section-tab ${isSelected ? "active" : ""}`}
+                    onClick={() => {
+                      setActiveSection(sec.id);
+                      setActiveTier("all");
+                    }}
+                    id={`tab-${sec.id}`}
+                  >
+                    {sec.title}
+                  </button>
+                );
+              })}
+            </nav>
+
+            {activeSection === "binary-search" && (
+              <button
+                type="button"
+                className="btn-jump-ladder"
+                onClick={scrollToLadder}
+                title="Jump directly to the 20-problem ladder"
+                aria-label="Jump directly to Problem Ladder"
+              >
+                <span className="ladder-jump-icon">⚡</span>
+                <span>Jump to Problem Ladder</span>
+                <span className="ladder-jump-badge">
+                  {sectionCompletedCount}/20 Solved
+                </span>
+                <span className="ladder-jump-arrow">↓</span>
+              </button>
+            )}
+          </div>
+
+          {/* In-Page Quick Navigation for Binary Search */}
+          {activeSection === "binary-search" && (
+            <div className="totw-quick-subnav" aria-label="Quick in-page navigation">
+              <span className="quick-subnav-label">Jump to:</span>
+              <button
+                type="button"
+                className="quick-subnav-btn quick-subnav-primary"
+                onClick={scrollToLadder}
+              >
+                ⚡ Problem Ladder (20) ↓
+              </button>
+              <button
+                type="button"
+                className="quick-subnav-btn"
+                onClick={() => scrollToEditorial("editorial-intro")}
+              >
+                Concepts
+              </button>
+              <button
+                type="button"
+                className="quick-subnav-btn"
+                onClick={() => scrollToEditorial("editorial-cp")}
+              >
+                Why Master BS
+              </button>
+              <button
+                type="button"
+                className="quick-subnav-btn"
+                onClick={() => scrollToEditorial("editorial-prereqs")}
+              >
+                Prerequisites
+              </button>
+              <button
+                type="button"
+                className="quick-subnav-btn"
+                onClick={() => scrollToEditorial("editorial-resources")}
+              >
+                Curated Resources
+              </button>
+            </div>
+          )}
         </header>
 
         {activeSection === "binary-search" && (
           <>
             {/* 1. Introduction to Binary Search (Collapsible) */}
-            <section className="totw-editorial-section">
-          <details className="totw-editorial-disclosure" defaultOpen>
-            <summary className="totw-disclosure-summary">
-              <span className="summary-title">Introduction to Binary Search</span>
-              <span className="summary-icon" aria-hidden="true">▾</span>
-            </summary>
-            <div className="totw-disclosure-body">
-              <p>
-                Binary Search is fundamentally not just a method for locating an item in a sorted list—it is a general search technique that repeatedly reduces a candidate search space by exploiting structural properties of that space. In its most familiar form, it determines whether a value exists in a sorted array of size <code>N</code> in <code>O(log N)</code> time by comparing the target with the midpoint and discarding half the elements on each step. More broadly, Binary Search can locate the exact boundary where an arbitrary condition transitions from false to true, or find an optimal numerical answer whenever problem feasibility is monotonic.
-              </p>
+            <section className="totw-editorial-section" id="editorial-intro">
+              <details className="totw-editorial-disclosure">
+                <summary className="totw-disclosure-summary">
+                  <span className="summary-title">Introduction to Binary Search</span>
+                  <span className="summary-icon" aria-hidden="true">▾</span>
+                </summary>
+                <div className="totw-disclosure-body">
+                  <p>
+                    Binary Search is a divide-and-conquer strategy that repeatedly halves a search space in <code>O(log N)</code> time. Beyond sorted array lookups, it pinpoints the exact boundary where an arbitrary boolean condition transitions from false to true (monotonic predicate), or searches numerical ranges for optimal values (<em>Binary Search on Answer</em>).
+                  </p>
 
-              <h4 className="body-subheading">Core Foundations &amp; Conceptual Patterns</h4>
-              <ul className="editorial-list">
-                <li>
-                  <strong>Searching in Sorted Arrays:</strong> Direct interval bisection on contiguous, indexed memory to find target elements or confirm their absence in logarithmic time.
-                </li>
-                <li>
-                  <strong>Boundary &amp; Range Detection:</strong> Locating the first or last position satisfying a condition (analogous to <code>lower_bound</code> and <code>upper_bound</code>), which allows occurrence counting and range queries in <code>O(log N)</code>.
-                </li>
-                <li>
-                  <strong>Searching Over a Monotonic Predicate:</strong> Evaluating an abstract boolean decision function <code>check(x)</code> that changes state at most once across the domain (e.g. <code>false, false, ..., true, true</code>).
-                </li>
-                <li>
-                  <strong>Binary Search on the Answer:</strong> Reformulating an optimization objective (e.g. <em>"minimize the maximum latency"</em> or <em>"maximize minimum separation"</em>) into a decision check (<em>"is answer X achievable?"</em>).
-                </li>
-                <li>
-                  <strong>Predicate Acceleration:</strong> Pairing the search with efficient supporting checks—such as prefix sums, greedy scans, or two pointers—so each feasibility test executes in <code>O(N)</code> or <code>O(1)</code> time.
-                </li>
-              </ul>
+                  <h4 className="body-subheading">Core Foundations &amp; Conceptual Patterns</h4>
+                  <ul className="editorial-list">
+                    <li>
+                      <strong>Sorted Arrays &amp; STL Bounds:</strong> Bisection on indexed memory via <code>std::lower_bound</code> (first element <code>≥ target</code>) and <code>std::upper_bound</code> (first element <code>&gt; target</code>) in <code>O(log N)</code>.
+                    </li>
+                    <li>
+                      <strong>Monotonic Predicates:</strong> Testing a boolean decision function <code>check(x)</code> that changes state at most once across the domain (e.g. <code>false → true</code>).
+                    </li>
+                    <li>
+                      <strong>Binary Search on Answer:</strong> Reformulating minimax optimization objectives (e.g. <em>"minimize the maximum latency"</em>) into decision checks (<em>"is answer X achievable?"</em>).
+                    </li>
+                    <li>
+                      <strong>Predicate Acceleration:</strong> Pairing feasibility checks with prefix sums, two pointers, or greedy scans to keep <code>check(mid)</code> within <code>O(N)</code> or <code>O(1)</code> time.
+                    </li>
+                  </ul>
 
-              <h4 className="body-subheading">Intuition by Example: First Element Greater Than or Equal to Target</h4>
-              <p>
-                Suppose we are given a sorted array <code>A = [2, 5, 8, 12, 19, 24]</code> and wish to find the first index <code>i</code> such that <code>A[i] ≥ 10</code>:
-              </p>
-              <div className="editorial-example-box">
-                <ol className="editorial-steps-list">
-                  <li>
-                    <strong>Initial Search Interval:</strong> We define the inclusive boundary <code>[low = 0, high = 5]</code>.
-                  </li>
-                  <li>
-                    <strong>Iteration 1:</strong> We evaluate midpoint <code>mid = 0 + (5 - 0) / 2 = 2</code>, where <code>A[2] = 8</code>. Since <code>8 &lt; 10</code>, no element at or before index 2 can satisfy the condition. We safely discard the entire left half by setting <code>low = mid + 1 = 3</code>. The new interval is <code>[3, 5]</code>.
-                  </li>
-                  <li>
-                    <strong>Iteration 2:</strong> Next midpoint is <code>mid = 3 + (5 - 3) / 2 = 4</code>, where <code>A[4] = 19</code>. Because <code>19 ≥ 10</code>, index 4 is a valid candidate. An even earlier valid element might exist to the left, but we can safely discard everything to the right of index 4. We record candidate <code>ans = 4</code> and contract the right boundary: <code>high = mid - 1 = 3</code>. The new interval is <code>[3, 3]</code>.
-                  </li>
-                  <li>
-                    <strong>Iteration 3:</strong> Final midpoint is <code>mid = 3</code>, where <code>A[3] = 12</code>. Because <code>12 ≥ 10</code>, index 3 is also valid and is earlier than 4. We update <code>ans = 3</code> and set <code>high = mid - 1 = 2</code>.
-                  </li>
-                  <li>
-                    <strong>Termination:</strong> Because <code>low (3) &gt; high (2)</code>, the loop terminates. The algorithm has narrowed the candidate space from 6 elements to the exact optimal answer (index 3, value 12) in just 3 comparisons.
-                  </li>
-                </ol>
-              </div>
-              <p style={{ marginTop: "0.75rem", fontStyle: "italic", color: "var(--text-muted)", fontSize: "0.875rem" }}>
-                Every correct Binary Search implementation relies on this structural guarantee: choosing interval boundaries carefully, computing <code>mid = low + (high - low) / 2</code> to prevent 32-bit signed integer overflow, and proving mathematically that the interval strictly shrinks on every step.
-              </p>
-            </div>
-          </details>
-        </section>
+                  <h4 className="body-subheading">Quick Example: First Element ≥ 10 in <code>[2, 5, 8, 12, 19, 24]</code></h4>
+                  <div className="editorial-example-box">
+                    <ul className="editorial-steps-list">
+                      <li>
+                        <strong>Search Interval:</strong> <code>[low = 0, high = 5]</code>. Safe midpoint: <code>mid = low + (high - low) / 2</code> to prevent 32-bit signed overflow.
+                      </li>
+                      <li>
+                        <strong>Step 1:</strong> <code>mid = 2</code>, <code>A[2] = 8 &lt; 10</code> → discard left half: <code>low = mid + 1 = 3</code>. Interval: <code>[3, 5]</code>.
+                      </li>
+                      <li>
+                        <strong>Step 2:</strong> <code>mid = 4</code>, <code>A[4] = 19 ≥ 10</code> → candidate found (<code>ans = 4</code>), contract right: <code>high = mid - 1 = 3</code>. Interval: <code>[3, 3]</code>.
+                      </li>
+                      <li>
+                        <strong>Step 3:</strong> <code>mid = 3</code>, <code>A[3] = 12 ≥ 10</code> → earlier candidate (<code>ans = 3</code>), set <code>high = 2</code>. Loop terminates (<code>low &gt; high</code>). Final answer: index 3 (value 12) in 3 iterations.
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </details>
+            </section>
 
-        {/* 2. Why Master Binary Search for Competitive Programming? (Collapsible) */}
-        <section className="totw-editorial-section">
-          <details className="totw-editorial-disclosure">
-            <summary className="totw-disclosure-summary">
-              <span className="summary-title">Why Master Binary Search for CP?</span>
-              <span className="summary-icon" aria-hidden="true">▾</span>
-            </summary>
-            <div className="totw-disclosure-body">
-              <p>
-                In competitive programming contests on Codeforces, AtCoder, and ICPC, Binary Search is not merely an occasional utility—it is a core algorithmic paradigm. Understanding why it matters separates competitors who struggle with brute force from those who routinely solve 1400–1800+ rated problems:
-              </p>
+            {/* 2. Why Master Binary Search for Competitive Programming? (Collapsible) */}
+            <section className="totw-editorial-section" id="editorial-cp">
+              <details className="totw-editorial-disclosure">
+                <summary className="totw-disclosure-summary">
+                  <span className="summary-title">Why Master Binary Search for CP?</span>
+                  <span className="summary-icon" aria-hidden="true">▾</span>
+                </summary>
+                <div className="totw-disclosure-body">
+                  <p>
+                    In competitive programming (Codeforces, AtCoder, ICPC), Binary Search routinely unlocks 1400–1800+ rated problems by turning complex optimization questions into simple yes/no checks:
+                  </p>
 
-              <ul className="editorial-list">
-                <li>
-                  <strong>Logarithmic Search Over Massive Domains:</strong> While linear algorithms scale as <code>O(N)</code>, Binary Search scales as <code>O(log N)</code>. For search domains as large as <code>10¹⁸</code> (common when optimizing coordinates, capacities, or times), <code>log₂(10¹⁸) ≈ 59.8</code>. The algorithm needs fewer than 60 evaluations to pinpoint an exact 64-bit integer answer, turning an impossible computation into a solution running in a few milliseconds.
-                </li>
-                <li>
-                  <strong>Ubiquity Across Contest Architectures:</strong> Binary search appears everywhere: searching sorted vectors, discrete geometric coordinate lookups, capacity and scheduling problems, network flow bottlenecks, and accelerating dynamic programming transitions (such as Longest Increasing Subsequence in <code>O(N log N)</code>).
-                </li>
-                <li>
-                  <strong>Monotonicity Recognition is the Real Skill:</strong> In contest problems, arrays are rarely given already sorted. The true test of competitive programming skill is recognizing that an abstract problem space has an underlying monotonicity—that is, if answer <code>X</code> is achievable, then all answers <code>X' &gt; X</code> are either also achievable or impossible. Once monotonicity is proven, finding the optimal answer reduces to designing an efficient decision check.
-                </li>
-                <li>
-                  <strong>Combinatorial Power with Other Paradigms:</strong> Binary Search reaches peak effectiveness when combined with other techniques: sorting as a preprocessing step, prefix sums for <code>O(1)</code> range checks, greedy choices inside <code>check(mid)</code>, and coordinate compression.
-                </li>
-                <li>
-                  <strong>Rigorous Invariants &amp; Correctness Proofs:</strong> Competitive programming demands bug-free implementation under contest time pressure. Mastering loop invariants (e.g. maintaining that the answer always lies within <code>[low, high]</code>), establishing unambiguous inclusive vs. exclusive boundary rules, avoiding infinite loops, and eliminating off-by-one errors build contest discipline that transfers to all data structures and graph algorithms.
-                </li>
-              </ul>
+                  <ul className="editorial-list">
+                    <li>
+                      <strong>Massive Domain Reduction:</strong> Search spaces as large as <code>10¹⁸</code> converge in fewer than 60 iterations (<code>log₂(10¹⁸) ≈ 60</code>), resolving in milliseconds.
+                    </li>
+                    <li>
+                      <strong>Monotonicity Recognition:</strong> Contest problems rarely give pre-sorted arrays. The key algorithmic competency is identifying that an answer space has monotonic feasibility: if answer <code>X</code> works, all <code>X' &gt; X</code> also work (or vice versa).
+                    </li>
+                    <li>
+                      <strong>Combinatorial Power:</strong> Combines seamlessly with greedy heuristics, prefix sums, coordinate compression, and dynamic programming (e.g. <code>O(N log N)</code> LIS).
+                    </li>
+                    <li>
+                      <strong>Rigorous Invariants:</strong> Loop invariants like maintaining the answer inside <code>[low, high]</code> and proving strict interval shrinking prevent infinite loops and off-by-one bugs.
+                    </li>
+                  </ul>
 
-              <h4 className="body-subheading">Practical Illustration: Binary Search on the Answer (CSES Factory Machines)</h4>
-              <p>
-                Consider a classic problem: A factory has <code>n</code> machines, where machine <code>i</code> requires <code>kᵢ</code> seconds to produce one product. All machines can operate simultaneously and independently. What is the minimum total time <code>T</code> needed to produce at least <code>m</code> products?
-              </p>
-              <div className="editorial-example-box">
-                <p>
-                  Calculating the optimal time <code>T</code> directly with a formula is complicated because machines have different speeds. However, the reverse question is straightforward:
-                </p>
-                <blockquote className="editorial-quote">
-                  <em>"Given a fixed candidate time <code>T</code>, can the machines collectively produce at least <code>m</code> products?"</em>
-                </blockquote>
-                <p>
-                  In <code>T</code> seconds, machine <code>i</code> produces exactly <code>⌊T / kᵢ⌋</code> products. The total products produced across all <code>n</code> machines in time <code>T</code> is simply:
-                </p>
-                <pre className="editorial-formula-box">
-                  <code>Total Products(T) = ∑ (T / kᵢ) for i = 1 to n</code>
-                </pre>
-                <p>
-                  Now observe the decisive property—<strong>monotonicity</strong>:
-                </p>
-                <ul className="editorial-list" style={{ marginTop: "0.5rem" }}>
-                  <li>If in time <code>T</code> the machines produce <code>≥ m</code> products, then any longer time <code>T' &gt; T</code> will produce at least as many products (also <code>true</code>).</li>
-                  <li>If in time <code>T</code> the machines produce <code>&lt; m</code> products, then any shorter time <code>T' &lt; T</code> cannot possibly suffice (also <code>false</code>).</li>
-                </ul>
-                <p style={{ marginTop: "0.75rem" }}>
-                  The feasibility condition <code>check(T)</code> transitions monotonically from <code>false</code> to <code>true</code> (<code>FFFF...TTTT</code>). By testing the midpoint <code>mid</code> and checking if <code>Total Products(mid) ≥ m</code> in <code>O(n)</code> time, we can binary search over the time range <code>[1, 10¹⁸]</code> to find the minimal valid <code>T</code> in approximately <code>60 × O(n)</code> operations—finishing in under 50 milliseconds for <code>n = 200,000</code>.
-                </p>
-              </div>
-            </div>
-          </details>
-        </section>
+                  <h4 className="body-subheading">Illustration: Feasibility on Answer (CSES Factory Machines)</h4>
+                  <div className="editorial-example-box">
+                    <p>
+                      <em>Task:</em> Find minimum time <code>T</code> for <code>n</code> machines with speeds <code>kᵢ</code> to produce <code>m</code> items.
+                    </p>
+                    <p>
+                      Instead of calculating <code>T</code> directly, test candidate time <code>mid</code>: each machine produces <code>⌊mid / kᵢ⌋</code> items, giving total production <code>∑ ⌊mid / kᵢ⌋</code> in <code>O(n)</code>.
+                    </p>
+                    <p style={{ margin: "0.4rem 0 0 0" }}>
+                      Because production is strictly monotonic with time, binary searching <code>T ∈ [1, 10¹⁸]</code> finds the minimum valid time in <code>~60 × O(n)</code> operations (&lt; 50ms for <code>n = 200,000</code>).
+                    </p>
+                  </div>
+                </div>
+              </details>
+            </section>
 
-        {/* 3. Prerequisites (Collapsible) */}
-        <section className="totw-editorial-section">
-          <details className="totw-editorial-disclosure">
-            <summary className="totw-disclosure-summary">
-              <span className="summary-title">Prerequisites</span>
-              <span className="summary-icon" aria-hidden="true">▾</span>
-            </summary>
-            <div className="totw-disclosure-body">
-              <p>
-                Before tackling competitive programming problems on Binary Search, students should have foundational familiarity with basic programming constructs and core algorithmic reasoning. You do not need advanced algorithms to get started—the essentials below will allow you to understand and implement binary search patterns effectively:
-              </p>
+            {/* 3. Prerequisites (Collapsible) */}
+            <section className="totw-editorial-section" id="editorial-prereqs">
+              <details className="totw-editorial-disclosure">
+                <summary className="totw-disclosure-summary">
+                  <span className="summary-title">Prerequisites</span>
+                  <span className="summary-icon" aria-hidden="true">▾</span>
+                </summary>
+                <div className="totw-disclosure-body">
+                  <p>
+                    Before attempting contest-level binary search problems, ensure you are comfortable with these core fundamentals:
+                  </p>
 
-              <ul className="editorial-list">
-                <li>
-                  <strong>A. C++ Fundamentals:</strong> Comfort with basic syntax—variables, arithmetic operations (preventing 32-bit signed integer overflow with <code>long long</code>), conditional branches (<code>if/else</code>), <code>while</code> loops, functions, and standard I/O (<code>cin/cout</code> with fast I/O). Binary Search is straightforward to write once the loop condition and state variables are clear.
-                </li>
-                <li>
-                  <strong>B. Arrays, Sorting &amp; Iterators:</strong> Understanding contiguous indexed memory (<code>std::vector</code>), 0-indexed arrays, and the concept of monotonic order. Standard binary search fundamentally requires the underlying sequence to be sorted. Familiarity with iterators (<code>a.begin()</code>, <code>a.end()</code>) is also essential for using C++ Standard Library algorithms.
-                </li>
-                <li>
-                  <strong>C. Time Complexity &amp; Asymptotic Growth:</strong> Intuitive understanding of the difference between linear time <code>O(N)</code> and logarithmic time <code>O(log N)</code>. Understanding why discarding half of the remaining candidate space on each step leads to rapid convergence, even for input ranges as large as <code>10¹⁸</code>.
-                </li>
-                <li>
-                  <strong>D. Basic Problem-Solving &amp; Boundary Conditions:</strong> Ability to translate English problem descriptions into precise boolean condition tests, verify edge cases (empty ranges, single elements, targets outside boundaries), and formulate a modular helper function <code>check(mid)</code>.
-                </li>
-                <li>
-                  <strong>E. Prefix Sums &amp; Greedy Reasoning (Useful Supporting Concepts):</strong> <em>Note: These are not mandatory prerequisites for basic Binary Search.</em> They become valuable in intermediate problems when the feasibility check inside <code>check(mid)</code> requires constant-time subarray sum queries or greedy item packing.
-                </li>
-              </ul>
+                  <ul className="editorial-list">
+                    <li>
+                      <strong>C++ Basics &amp; Types:</strong> Loops, conditionals, fast I/O, and using <code>long long</code> to avoid 32-bit signed integer overflow in midpoint calculations.
+                    </li>
+                    <li>
+                      <strong>Arrays &amp; Sorting:</strong> Contiguous memory (<code>std::vector</code>), sortedness invariants, and STL iterators (<code>begin()</code>, <code>end()</code>).
+                    </li>
+                    <li>
+                      <strong>Time Complexity:</strong> Grasping logarithmic <code>O(log N)</code> bisection speed vs linear <code>O(N)</code> scans.
+                    </li>
+                    <li>
+                      <strong>Predicate Formulation:</strong> Structuring a standalone boolean helper function <code>bool check(long long mid)</code> for answer-space problems.
+                    </li>
+                  </ul>
+                </div>
+              </details>
+            </section>
 
-              <p style={{ marginTop: "1rem", color: "var(--text-muted)", fontStyle: "italic", fontSize: "0.875rem" }}>
-                Tip: You do not need to master all supporting concepts before you begin. Start by implementing standard array lookups and lower/upper bounds, and develop predicate formulation skills as problems gradually demand them.
-              </p>
-            </div>
-          </details>
-        </section>
-
-        {/* 4. Curated Learning Resources (Four Collapsible Groups) */}
-        <section className="totw-editorial-section">
+            {/* 4. Curated Learning Resources (Four Collapsible Groups) */}
+            <section className="totw-editorial-section" id="editorial-resources">
           <div className="section-title-wrap">
             <h2 className="topic-section-heading">
               <span>Curated Learning Resources</span>
@@ -422,7 +467,7 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
         {/* =================================================================
             Binary Search Curated Problem Ladder (20 Regular + 1 Special)
             ================================================================= */}
-        <section className="topic-page-section" id="topic-main-sections">
+        <section className="topic-page-section" id="problem-ladder">
           <div className="problem-section-content">
             {/* Progress Summary Card for Binary Search */}
             <div className="totw-progress-card">
@@ -946,9 +991,9 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
         <button
           type="button"
           className="floating-jump-btn"
-          onClick={() => scrollToSections("binary-search")}
-          title="Scroll down to Problem Ladder"
-          aria-label="Scroll down to Problem Ladder"
+          onClick={scrollToLadder}
+          title="Jump down to Problem Ladder"
+          aria-label="Jump down to Problem Ladder"
         >
           <span>Problem Ladder</span>
           <span className="floating-jump-badge">
