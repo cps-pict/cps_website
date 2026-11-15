@@ -119,6 +119,7 @@ export const topicOfTheWeek = {
     // Easy Tier: Foundations & Invariants
     {
       id: "p1",
+      categories: ["two-pointers"],
       name: "Two Sum II - Input Array Is Sorted",
       platform: "LeetCode 167",
       problemUrl: "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/",
@@ -130,6 +131,7 @@ export const topicOfTheWeek = {
     },
     {
       id: "p2",
+      categories: ["sliding-window"],
       name: "Maximum Average Subarray I",
       platform: "LeetCode 643",
       problemUrl: "https://leetcode.com/problems/maximum-average-subarray-i/",
@@ -141,6 +143,7 @@ export const topicOfTheWeek = {
     },
     {
       id: "p3",
+      categories: ["binary-search"],
       name: "Binary Search",
       platform: "LeetCode 704",
       problemUrl: "https://leetcode.com/problems/binary-search/",
@@ -152,6 +155,7 @@ export const topicOfTheWeek = {
     },
     {
       id: "p4",
+      categories: ["two-pointers"],
       name: "Sereja and Dima",
       platform: "Codeforces 381A",
       problemUrl: "https://codeforces.com/problemset/problem/381/A",
@@ -165,6 +169,7 @@ export const topicOfTheWeek = {
     // Medium Tier: Standard Applications & Variations
     {
       id: "p5",
+      categories: ["sliding-window"],
       name: "Subarray Product Less Than K",
       platform: "LeetCode 713",
       problemUrl: "https://leetcode.com/problems/subarray-product-less-than-k/",
@@ -176,6 +181,7 @@ export const topicOfTheWeek = {
     },
     {
       id: "p6",
+      categories: ["two-pointers", "sliding-window"],
       name: "Books",
       platform: "Codeforces 279B",
       problemUrl: "https://codeforces.com/problemset/problem/279/B",
@@ -187,6 +193,7 @@ export const topicOfTheWeek = {
     },
     {
       id: "p7",
+      categories: ["sliding-window"],
       name: "Longest Repeating Character Replacement",
       platform: "LeetCode 424",
       problemUrl: "https://leetcode.com/problems/longest-repeating-character-replacement/",
@@ -198,6 +205,7 @@ export const topicOfTheWeek = {
     },
     {
       id: "p8",
+      categories: ["binary-search"],
       name: "Aggressive Cows",
       platform: "SPOJ AGGRCOW",
       problemUrl: "https://www.spoj.com/problems/AGGRCOW/",
@@ -209,6 +217,7 @@ export const topicOfTheWeek = {
     },
     {
       id: "p9",
+      categories: ["binary-search"],
       name: "Koko Eating Bananas",
       platform: "LeetCode 875",
       problemUrl: "https://leetcode.com/problems/koko-eating-bananas/",
@@ -220,6 +229,7 @@ export const topicOfTheWeek = {
     },
     {
       id: "p10",
+      categories: ["sliding-window"],
       name: "Maximum Beauty of an Array After Operation",
       platform: "LeetCode 2779",
       problemUrl: "https://leetcode.com/problems/maximum-beauty-of-an-array-after-applying-operation/",
@@ -233,6 +243,7 @@ export const topicOfTheWeek = {
     // Hard Tier: Advanced Applications & Combined Concepts
     {
       id: "p11",
+      categories: ["two-pointers", "sliding-window"],
       name: "Minimum Window Substring",
       platform: "LeetCode 76",
       problemUrl: "https://leetcode.com/problems/minimum-window-substring/",
@@ -244,6 +255,7 @@ export const topicOfTheWeek = {
     },
     {
       id: "p12",
+      categories: ["binary-search"],
       name: "Maximum Median",
       platform: "Codeforces 1201C",
       problemUrl: "https://codeforces.com/problemset/problem/1201/C",
@@ -255,6 +267,7 @@ export const topicOfTheWeek = {
     },
     {
       id: "p13",
+      categories: ["binary-search"],
       name: "Factory Machines",
       platform: "CSES 1620",
       problemUrl: "https://cses.fi/problemset/task/1620",
@@ -263,6 +276,258 @@ export const topicOfTheWeek = {
       tags: ["Binary Search on Answer", "CSES"],
       hint: "Search on time t. In check(t), calculate sum(t / machine_time). If sum >= target products, search lower half.",
       editorialUrl: "https://usaco.guide/silver/binary-search"
+    },
+
+    // Additional Binary Search Practice Set (from Excel)
+    {
+      id: "p14",
+      categories: ["binary-search"],
+      name: "704. Binary Search",
+      platform: "LeetCode",
+      problemUrl: "https://leetcode.com/problems/binary-search/",
+      difficulty: "Easy",
+      difficultyTier: "Easy",
+      tags: ["Classic binary search"]
+    },
+    {
+      id: "p15",
+      categories: ["binary-search"],
+      name: "35. Search Insert Position",
+      platform: "LeetCode",
+      problemUrl: "https://leetcode.com/problems/search-insert-position/",
+      difficulty: "Easy",
+      difficultyTier: "Easy",
+      tags: ["Lower bound"]
+    },
+    {
+      id: "p16",
+      categories: ["binary-search"],
+      name: "278. First Bad Version",
+      platform: "LeetCode",
+      problemUrl: "https://leetcode.com/problems/first-bad-version/",
+      difficulty: "Easy",
+      difficultyTier: "Easy",
+      tags: ["First true in monotonic predicate"]
+    },
+    {
+      id: "p17",
+      categories: ["binary-search"],
+      name: "69. Sqrt(x)",
+      platform: "LeetCode",
+      problemUrl: "https://leetcode.com/problems/sqrtx/",
+      difficulty: "Easy",
+      difficultyTier: "Easy",
+      tags: ["Binary search on answer (integer)"]
+    },
+    {
+      id: "p18",
+      categories: ["binary-search"],
+      name: "367. Valid Perfect Square",
+      platform: "LeetCode",
+      problemUrl: "https://leetcode.com/problems/valid-perfect-square/",
+      difficulty: "Easy",
+      difficultyTier: "Easy",
+      tags: ["Binary search on answer (integer)"]
+    },
+    {
+      id: "p19",
+      categories: ["binary-search"],
+      name: "744. Find Smallest Letter Greater Than Target",
+      platform: "LeetCode",
+      problemUrl: "https://leetcode.com/problems/find-smallest-letter-greater-than-target/",
+      difficulty: "Easy",
+      difficultyTier: "Easy",
+      tags: ["Upper bound with wraparound"]
+    },
+    {
+      id: "p20",
+      categories: ["binary-search"],
+      name: "706B - Interesting drink",
+      platform: "Codeforces",
+      problemUrl: "https://codeforces.com/problemset/problem/706/B",
+      difficulty: "~1100",
+      difficultyTier: "Easy",
+      tags: ["Sort + upper bound"]
+    },
+    {
+      id: "p21",
+      categories: ["binary-search"],
+      name: "34. Find First and Last Position of Element in Sorted Array",
+      platform: "LeetCode",
+      problemUrl: "https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/",
+      difficulty: "Medium",
+      difficultyTier: "Medium",
+      tags: ["Lower and upper bound"]
+    },
+    {
+      id: "p22",
+      categories: ["binary-search"],
+      name: "74. Search a 2D Matrix",
+      platform: "LeetCode",
+      problemUrl: "https://leetcode.com/problems/search-a-2d-matrix/",
+      difficulty: "Medium",
+      difficultyTier: "Medium",
+      tags: ["Binary search on flattened index"]
+    },
+    {
+      id: "p23",
+      categories: ["binary-search"],
+      name: "474B - Worms",
+      platform: "Codeforces",
+      problemUrl: "https://codeforces.com/problemset/problem/474/B",
+      difficulty: "~1200",
+      difficultyTier: "Easy",
+      tags: ["Prefix sums + lower bound"]
+    },
+    {
+      id: "p24",
+      categories: ["binary-search"],
+      name: "492B - Vanya and Lanterns",
+      platform: "Codeforces",
+      problemUrl: "https://codeforces.com/problemset/problem/492/B",
+      difficulty: "~1200",
+      difficultyTier: "Easy",
+      tags: ["Binary search on answer (min radius)"]
+    },
+    {
+      id: "p25",
+      categories: ["binary-search"],
+      name: "153. Find Minimum in Rotated Sorted Array",
+      platform: "LeetCode",
+      problemUrl: "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/",
+      difficulty: "Medium",
+      difficultyTier: "Medium",
+      tags: ["Binary search on a rotated array"]
+    },
+    {
+      id: "p26",
+      categories: ["binary-search"],
+      name: "162. Find Peak Element",
+      platform: "LeetCode",
+      problemUrl: "https://leetcode.com/problems/find-peak-element/",
+      difficulty: "Medium",
+      difficultyTier: "Medium",
+      tags: ["Binary search without full sortedness"]
+    },
+    {
+      id: "p27",
+      categories: ["binary-search"],
+      name: "33. Search in Rotated Sorted Array",
+      platform: "LeetCode",
+      problemUrl: "https://leetcode.com/problems/search-in-rotated-sorted-array/",
+      difficulty: "Medium",
+      difficultyTier: "Medium",
+      tags: ["Binary search on a rotated array"]
+    },
+    {
+      id: "p28",
+      categories: ["binary-search"],
+      name: "165B - Burning Midnight Oil",
+      platform: "Codeforces",
+      problemUrl: "https://codeforces.com/problemset/problem/165/B",
+      difficulty: "~1500",
+      difficultyTier: "Medium",
+      tags: ["Binary search on answer"]
+    },
+    {
+      id: "p29",
+      categories: ["binary-search"],
+      name: "875. Koko Eating Bananas",
+      platform: "LeetCode",
+      problemUrl: "https://leetcode.com/problems/koko-eating-bananas/",
+      difficulty: "Medium",
+      difficultyTier: "Medium",
+      tags: ["Binary search on answer"]
+    },
+    {
+      id: "p30",
+      categories: ["binary-search"],
+      name: "760B - Frodo and pillows",
+      platform: "Codeforces",
+      problemUrl: "https://codeforces.com/problemset/problem/760/B",
+      difficulty: "~1500",
+      difficultyTier: "Medium",
+      tags: ["Binary search on answer + arithmetic sums"]
+    },
+    {
+      id: "p31",
+      categories: ["binary-search"],
+      name: "372A - Counting Kangaroos is Fun",
+      platform: "Codeforces",
+      problemUrl: "https://codeforces.com/problemset/problem/372/A",
+      difficulty: "~1600",
+      difficultyTier: "Medium",
+      tags: ["Binary search on answer + greedy matching"]
+    },
+    {
+      id: "p32",
+      categories: ["binary-search"],
+      name: "1011. Capacity To Ship Packages Within D Days",
+      platform: "LeetCode",
+      problemUrl: "https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/",
+      difficulty: "Medium",
+      difficultyTier: "Medium",
+      tags: ["Binary search on answer + greedy check"]
+    },
+    {
+      id: "p33",
+      categories: ["binary-search"],
+      name: "410. Split Array Largest Sum",
+      platform: "LeetCode",
+      problemUrl: "https://leetcode.com/problems/split-array-largest-sum/",
+      difficulty: "Hard",
+      difficultyTier: "Hard",
+      tags: ["Binary search on answer + greedy partition"]
+    },
+    {
+      id: "p34",
+      categories: ["binary-search"],
+      name: "1731D - Valiant's New Map",
+      platform: "Codeforces",
+      problemUrl: "https://codeforces.com/contest/1731/problem/D",
+      difficulty: "~1900",
+      difficultyTier: "Hard",
+      tags: ["2D prefix sums + binary search on answer (square side)"]
+    },
+    {
+      id: "p35",
+      categories: ["binary-search"],
+      name: "1852A - Ntarsis' Set",
+      platform: "Codeforces",
+      problemUrl: "https://codeforces.com/contest/1852/problem/A",
+      difficulty: "~1700",
+      difficultyTier: "Hard",
+      tags: ["Binary search on answer"]
+    },
+    {
+      id: "p36",
+      categories: ["binary-search"],
+      name: "1873E - Building an Aquarium",
+      platform: "Codeforces",
+      problemUrl: "https://codeforces.com/problemset/problem/1873/E",
+      difficulty: "~1100",
+      difficultyTier: "Easy",
+      tags: ["Binary search on answer + sum check"]
+    },
+    {
+      id: "p37",
+      categories: ["binary-search"],
+      name: "1850E - Cardboard for Pictures",
+      platform: "Codeforces",
+      problemUrl: "https://codeforces.com/problemset/problem/1850/E",
+      difficulty: "~1500",
+      difficultyTier: "Medium",
+      tags: ["Binary search on answer + sum of squares"]
+    },
+    {
+      id: "p38",
+      categories: ["binary-search"],
+      name: "IC26TM - Team Formation Tactics (ICPC Online 2026 Postseason, G)",
+      platform: "CodeChef",
+      problemUrl: "https://www.codechef.com/ICPCOL26POST/problems/IC26TM",
+      difficulty: "Hard",
+      difficultyTier: "Hard",
+      tags: []
     }
   ],
 
@@ -272,3 +537,41 @@ export const topicOfTheWeek = {
     "Join the weekly CPS discussion call on Sundays to ask questions and review alternative solutions."
   ]
 };
+
+
+export { algorithmicTemplates, templateCategories } from "./algorithmicTemplates";
+
+export const TOPIC_SECTIONS = [
+  {
+    id: "binary-search",
+    title: "1. Binary Search",
+    shortTitle: "Binary Search",
+    icon: "🔍",
+    badge: "30 Problems",
+    description: "Binary search on monotonic answer spaces, discrete predicate testing check(mid), and logarithmic interval reduction."
+  },
+  {
+    id: "two-pointers",
+    title: "2. Two Pointers",
+    shortTitle: "Two Pointers",
+    icon: "⇄",
+    badge: "4 Problems",
+    description: "Converging opposite-end traversals and same-direction two pointer scans on ordered structures."
+  },
+  {
+    id: "sliding-window",
+    title: "3. Sliding Window",
+    shortTitle: "Sliding Window",
+    icon: "◫",
+    badge: "6 Problems",
+    description: "Fixed-size window running aggregates and variable-size dynamic expansion & contraction invariants."
+  },
+  {
+    id: "core-patterns",
+    title: "4. Core Algorithmic Patterns",
+    shortTitle: "Code Templates",
+    icon: "⚡",
+    badge: "14 Templates",
+    description: "Production-ready, battle-tested C++ templates for contest-level algorithms with complexities and usage notes."
+  }
+];

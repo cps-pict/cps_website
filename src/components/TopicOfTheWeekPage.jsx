@@ -1,21 +1,25 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
-import { supabase } from "../lib/supabase";
-import { topicOfTheWeek } from "../data/topicOfTheWeek";
+import { supabase, isSupabaseConfigured } from "../lib/supabase";
+import { topicOfTheWeek, TOPIC_SECTIONS } from "../data/topicOfTheWeek";
+import { algorithmicTemplates, templateCategories } from "../data/algorithmicTemplates";
 
 export default function TopicOfTheWeekPage({ onBackToHome }) {
+  const [activeSection, setActiveSection] = useState("binary-search");
   const [activeTier, setActiveTier] = useState("all");
+  const [activeTemplateCategory, setActiveTemplateCategory] = useState("All");
   const [openHints, setOpenHints] = useState({});
   const [completedMap, setCompletedMap] = useState({});
   const [savingId, setSavingId] = useState(null);
+  const [copiedId, setCopiedId] = useState(null);
 
   const { user, signInWithGoogle } = useAuth();
 
   // Load user's problem completion progress from Supabase
   useEffect(() => {
     async function loadProgress() {
-      if (!user) {
+      if (!user || !isSupabaseConfigured) {
         setCompletedMap({});
         return;
       }
@@ -53,6 +57,13 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
   // Toggle problem completion status
   const handleToggleCompleted = async (problemId) => {
     if (!user) {
+      if (!isSupabaseConfigured) {
+        alert(
+          "Problem progress tracking is unavailable because local Supabase credentials are not configured.\n\nAll problems can still be viewed and solved in guest mode."
+        );
+        return;
+      }
+
       const proceed = window.confirm(
         "Sign in with your Google account to track and save your problem completions?"
       );
@@ -112,19 +123,56 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
     }
   };
 
+  const handleCopyCode = async (id, codeSnippet) => {
+    try {
+      await navigator.clipboard.writeText(codeSnippet);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+    } catch (err) {
+      console.error("Failed to copy code snippet to clipboard:", err);
+    }
+  };
+
+  // Section-specific problem list
+  const isProblemSection = activeSection !== "core-patterns";
+  const currentSectionMeta =
+    TOPIC_SECTIONS.find((s) => s.id === activeSection) || TOPIC_SECTIONS[0];
+
+  const sectionProblems = topicOfTheWeek.problemSet.filter((p) =>
+    p.categories?.includes(activeSection)
+  );
+
   const filteredProblems =
     activeTier === "all"
-      ? topicOfTheWeek.problemSet
-      : topicOfTheWeek.problemSet.filter(
+      ? sectionProblems
+      : sectionProblems.filter(
           (p) => p.difficultyTier.toLowerCase() === activeTier.toLowerCase()
         );
 
-  const totalProblems = topicOfTheWeek.problemSet.length;
-  const completedCount = topicOfTheWeek.problemSet.filter((p) => !!completedMap[p.id]).length;
-  const progressPercent = totalProblems > 0 ? Math.round((completedCount / totalProblems) * 100) : 0;
+  const sectionCompletedCount = sectionProblems.filter((p) => !!completedMap[p.id]).length;
+  const sectionProgressPercent =
+    sectionProblems.length > 0
+      ? Math.round((sectionCompletedCount / sectionProblems.length) * 100)
+      : 0;
 
-  const scrollToProblemSet = () => {
-    const el = document.getElementById("problem-set");
+  // Global counts for the whole topic
+  const totalAllProblems = topicOfTheWeek.problemSet.length;
+  const totalAllCompleted = topicOfTheWeek.problemSet.filter((p) => !!completedMap[p.id]).length;
+  const totalAllPercent =
+    totalAllProblems > 0 ? Math.round((totalAllCompleted / totalAllProblems) * 100) : 0;
+
+  // Filter templates for Section 4
+  const filteredTemplates =
+    activeTemplateCategory === "All"
+      ? algorithmicTemplates
+      : algorithmicTemplates.filter((t) => t.category === activeTemplateCategory);
+
+  const scrollToSections = (secId) => {
+    if (secId) {
+      setActiveSection(secId);
+      setActiveTier("all");
+    }
+    const el = document.getElementById("topic-main-sections");
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
     }
@@ -144,7 +192,7 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
           </Link>
         </div>
 
-        {/* 1 & 2: Header, Title, Week, Publication Date */}
+        {/* Header, Title, Week, Publication Date */}
         <header className="topic-page-header">
           <div className="topic-page-meta-row">
             <span className="week-badge">Week {topicOfTheWeek.week} Focus</span>
@@ -165,35 +213,46 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
             <button
               type="button"
               className="btn btn-primary"
-              onClick={scrollToProblemSet}
+              onClick={() => scrollToSections("binary-search")}
               id="jump-to-sheet-btn"
             >
-              <span>Jump to Problem Ladder ({totalProblems} Problems)</span>
+              <span>Binary Search ({topicOfTheWeek.problemSet.filter(p => p.categories?.includes("binary-search")).length}Q)</span>
               <span>↓</span>
             </button>
             <button
               type="button"
               className="btn btn-secondary"
-              onClick={() => {
-                const el = document.getElementById("core-patterns");
-                if (el) el.scrollIntoView({ behavior: "smooth" });
-              }}
+              onClick={() => scrollToSections("two-pointers")}
             >
-              Core Algorithmic Patterns
+              <span>Two Pointers ({topicOfTheWeek.problemSet.filter(p => p.categories?.includes("two-pointers")).length}Q)</span>
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => scrollToSections("sliding-window")}
+            >
+              <span>Sliding Window ({topicOfTheWeek.problemSet.filter(p => p.categories?.includes("sliding-window")).length}Q)</span>
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => scrollToSections("core-patterns")}
+            >
+              <span>Core Templates ({algorithmicTemplates.length})</span>
             </button>
             <div className="topic-quick-stats">
               {user ? (
                 <span>
-                  Your Progress: <strong>{completedCount}/{totalProblems}</strong> ({progressPercent}%)
+                  Your Progress: <strong>{totalAllCompleted}/{totalAllProblems}</strong> ({totalAllPercent}%)
                 </span>
               ) : (
-                <span>{totalProblems} Curated Problems • Easy to Hard</span>
+                <span>{totalAllProblems} Total Curated Problems • 4 Topic Sections</span>
               )}
             </div>
           </div>
         </header>
 
-        {/* 3: Introduction & Motivation */}
+        {/* Introduction & Motivation */}
         <section className="topic-page-section">
           <h2 className="topic-section-heading">
             <span>Introduction &amp; Motivation</span>
@@ -203,7 +262,7 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
           </div>
         </section>
 
-        {/* 5: Prerequisites */}
+        {/* Prerequisites */}
         <section className="topic-page-section">
           <h2 className="topic-section-heading">
             <span>Prerequisites</span>
@@ -220,26 +279,7 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
           </div>
         </section>
 
-        {/* 4: Important Concepts & Algorithmic Patterns */}
-        <section className="topic-page-section" id="core-patterns">
-          <h2 className="topic-section-heading">
-            <span>Core Algorithmic Patterns</span>
-          </h2>
-          <div className="concept-details-list">
-            {topicOfTheWeek.conceptsAndPatterns.map((concept) => (
-              <article key={concept.id} className="concept-detail-block">
-                <h4>{concept.title}</h4>
-                <div className="concept-detail-summary">{concept.summary}</div>
-                <p className="concept-detail-explanation">{concept.explanation}</p>
-                <pre className="concept-code-box">
-                  <code>{concept.codeSnippet}</code>
-                </pre>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        {/* 6: Curated Learning Resources */}
+        {/* Curated Learning Resources */}
         <section className="topic-page-section">
           <h2 className="topic-section-heading">
             <span>Curated Learning Resources</span>
@@ -278,194 +318,342 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
           </div>
         </section>
 
-        {/* 7: Topic-Wise Problem Set with Checkmarks & Progress */}
-        <section className="topic-page-section" id="problem-set">
-          {/* Progress Summary Card */}
-          <div className="totw-progress-card">
-            <div className="totw-progress-header">
-              <div className="totw-progress-title-wrap">
-                <span className="totw-progress-badge">Student Progress</span>
-                <h3>
-                  {user ? (
-                    <>
-                      Completed: <span className="highlight-green">{completedCount}</span> / {totalProblems} problems
-                    </>
-                  ) : (
-                    "Track Your Problem Solving"
-                  )}
-                </h3>
-              </div>
-              <div className="totw-progress-stat">
-                <span className="progress-percent-number">{progressPercent}%</span>
-                <span className="progress-percent-label">Completed</span>
-              </div>
-            </div>
-
-            {/* Visual Bar */}
-            <div className="totw-progress-bar-bg" role="progressbar" aria-valuenow={progressPercent} aria-valuemin="0" aria-valuemax="100">
-              <div className="totw-progress-bar-fill" style={{ width: `${progressPercent}%` }}></div>
-            </div>
-
-            <div className="totw-progress-footer">
-              {user ? (
-                <span className="totw-user-status">
-                  ✓ Signed in as <strong>{user.email}</strong> • Syncing with Supabase
-                </span>
-              ) : (
-                <div className="totw-guest-prompt">
-                  <span>Sign in with Google to check off problems and track your progress across devices:</span>
-                  <button type="button" className="btn btn-secondary nav-google-btn" onClick={signInWithGoogle} style={{ padding: "0.25rem 0.65rem", fontSize: "0.75rem" }}>
-                    Sign in with Google
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Ladder Controls */}
-          <div className="problem-set-controls">
-            <div>
-              <h2 className="topic-section-heading" style={{ marginBottom: "0.25rem" }}>
-                <span>Curated Problem Ladder ({filteredProblems.length})</span>
-              </h2>
-              <p style={{ fontSize: "0.8125rem", color: "var(--text-secondary)" }}>
-                Arranged by difficulty ladder. Solve sequentially and mark problems as completed.
-              </p>
-            </div>
-
-            <div className="problem-tier-tabs" role="tablist">
-              <button
-                type="button"
-                className={`tier-tab-btn ${activeTier === "all" ? "active" : ""}`}
-                onClick={() => setActiveTier("all")}
-              >
-                All ({topicOfTheWeek.problemSet.length})
-              </button>
-              <button
-                type="button"
-                className={`tier-tab-btn ${activeTier === "easy" ? "active" : ""}`}
-                onClick={() => setActiveTier("easy")}
-              >
-                Easy ({topicOfTheWeek.problemSet.filter((p) => p.difficultyTier === "Easy").length})
-              </button>
-              <button
-                type="button"
-                className={`tier-tab-btn ${activeTier === "medium" ? "active" : ""}`}
-                onClick={() => setActiveTier("medium")}
-              >
-                Medium ({topicOfTheWeek.problemSet.filter((p) => p.difficultyTier === "Medium").length})
-              </button>
-              <button
-                type="button"
-                className={`tier-tab-btn ${activeTier === "hard" ? "active" : ""}`}
-                onClick={() => setActiveTier("hard")}
-              >
-                Hard ({topicOfTheWeek.problemSet.filter((p) => p.difficultyTier === "Hard").length})
-              </button>
-            </div>
-          </div>
-
-          {/* Problem Items List */}
-          <div className="problem-ladder-list">
-            {filteredProblems.map((prob) => {
-              const diffClass =
-                prob.difficultyTier === "Easy"
-                  ? "diff-easy"
-                  : prob.difficultyTier === "Medium"
-                  ? "diff-medium"
-                  : "diff-hard";
-
-              const isHintOpen = !!openHints[prob.id];
-              const isDone = !!completedMap[prob.id];
-              const isSaving = savingId === prob.id;
+        {/* =================================================================
+            FOUR MAIN SECTIONS:
+            1. Binary Search
+            2. Two Pointers
+            3. Sliding Window
+            4. Core Algorithmic Patterns (Code Templates Only)
+            ================================================================= */}
+        <section className="topic-page-section" id="topic-main-sections">
+          {/* Section Navigation Tabs */}
+          <nav className="totw-section-nav" aria-label="Topic Sections Navigation">
+            {TOPIC_SECTIONS.map((sec) => {
+              const isSelected = activeSection === sec.id;
+              let countLabel = sec.badge;
+              if (sec.id === "binary-search") {
+                const cnt = topicOfTheWeek.problemSet.filter((p) => p.categories?.includes("binary-search")).length;
+                countLabel = `${cnt} Problems`;
+              } else if (sec.id === "two-pointers") {
+                const cnt = topicOfTheWeek.problemSet.filter((p) => p.categories?.includes("two-pointers")).length;
+                countLabel = `${cnt} Problems`;
+              } else if (sec.id === "sliding-window") {
+                const cnt = topicOfTheWeek.problemSet.filter((p) => p.categories?.includes("sliding-window")).length;
+                countLabel = `${cnt} Problems`;
+              }
 
               return (
-                <div
-                  key={prob.id}
-                  className={`problem-row-card ${isDone ? "problem-card-completed" : ""}`}
+                <button
+                  key={sec.id}
+                  type="button"
+                  className={`totw-section-tab ${isSelected ? "active" : ""}`}
+                  onClick={() => {
+                    setActiveSection(sec.id);
+                    setActiveTier("all");
+                  }}
+                  id={`tab-${sec.id}`}
                 >
-                  <div className="problem-main-row">
-                    {/* Checkmark Button */}
-                    <button
-                      type="button"
-                      className={`problem-check-btn ${isDone ? "checked" : ""}`}
-                      onClick={() => handleToggleCompleted(prob.id)}
-                      disabled={isSaving}
-                      title={isDone ? "Mark as Incomplete" : "Mark as Completed"}
-                      aria-label={`Mark ${prob.name} as ${isDone ? "incomplete" : "completed"}`}
-                    >
-                      {isDone ? "✓" : ""}
-                    </button>
+                  <span className="tab-icon">{sec.icon}</span>
+                  <span>{sec.shortTitle}</span>
+                  <span className="tab-badge">{countLabel}</span>
+                </button>
+              );
+            })}
+          </nav>
 
-                    <div className="problem-left-info">
-                      <div className="problem-title-line">
-                        <span className="problem-platform-tag">{prob.platform}</span>
-                        <span className={`problem-title ${isDone ? "problem-title-done" : ""}`}>
-                          {prob.name}
-                        </span>
-                        {isDone && <span className="problem-done-tag">Solved ✓</span>}
-                      </div>
-                      <div className="problem-tags-row">
-                        {prob.tags.map((t, idx) => (
-                          <span key={idx} className="problem-tag-pill">
-                            {t}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
+          {/* Section Overview Banner */}
+          <div className="section-intro-banner">
+            <h3>
+              <span>{currentSectionMeta.icon}</span>
+              <span>{currentSectionMeta.title}</span>
+            </h3>
+            <p>{currentSectionMeta.description}</p>
+          </div>
 
-                    <div className="problem-right-actions">
-                      <span className={`diff-badge ${diffClass}`}>{prob.difficulty}</span>
-
-                      {prob.editorialUrl && (
-                        <a
-                          href={prob.editorialUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn btn-secondary"
-                          style={{ padding: "0.35rem 0.65rem", fontSize: "0.75rem" }}
-                        >
-                          Editorial ↗
-                        </a>
+          {/* If Active Section is a Problem Section (Binary Search, Two Pointers, or Sliding Window) */}
+          {isProblemSection && (
+            <div className="problem-section-content">
+              {/* Progress Summary Card for this section */}
+              <div className="totw-progress-card">
+                <div className="totw-progress-header">
+                  <div className="totw-progress-title-wrap">
+                    <span className="totw-progress-badge">{currentSectionMeta.shortTitle} Progress</span>
+                    <h3>
+                      {user ? (
+                        <>
+                          Completed: <span className="highlight-green">{sectionCompletedCount}</span> / {sectionProblems.length} problems
+                        </>
+                      ) : (
+                        `Track ${currentSectionMeta.shortTitle} Problem Solving`
                       )}
-
-                      <a
-                        href={prob.problemUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn btn-primary"
-                        style={{ padding: "0.35rem 0.85rem", fontSize: "0.75rem" }}
-                      >
-                        Solve ↗
-                      </a>
-                    </div>
+                    </h3>
                   </div>
+                  <div className="totw-progress-stat">
+                    <span className="progress-percent-number">{sectionProgressPercent}%</span>
+                    <span className="progress-percent-label">Completed</span>
+                  </div>
+                </div>
 
-                  {prob.hint && (
-                    <div className="problem-hint-toggle">
+                {/* Visual Bar */}
+                <div
+                  className="totw-progress-bar-bg"
+                  role="progressbar"
+                  aria-valuenow={sectionProgressPercent}
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                >
+                  <div className="totw-progress-bar-fill" style={{ width: `${sectionProgressPercent}%` }}></div>
+                </div>
+
+                <div className="totw-progress-footer">
+                  {user ? (
+                    <span className="totw-user-status">
+                      ✓ Signed in as <strong>{user.email}</strong> • Syncing with Supabase ({totalAllCompleted}/{totalAllProblems} overall)
+                    </span>
+                  ) : (
+                    <div className="totw-guest-prompt">
+                      <span>Sign in with Google to check off problems and track your progress across devices:</span>
                       <button
                         type="button"
-                        className="hint-btn"
-                        onClick={() => toggleHint(prob.id)}
-                        aria-expanded={isHintOpen}
+                        className="btn btn-secondary nav-google-btn"
+                        onClick={signInWithGoogle}
+                        style={{ padding: "0.25rem 0.65rem", fontSize: "0.75rem" }}
                       >
-                        <span>{isHintOpen ? "▼ Hide Hint" : "▶ Need a hint?"}</span>
+                        Sign in with Google
                       </button>
+                    </div>
+                  )}
+                </div>
+              </div>
 
-                      {isHintOpen && (
-                        <div className="hint-content-box">
-                          <strong>Hint:</strong> {prob.hint}
+              {/* Ladder Controls */}
+              <div className="problem-set-controls">
+                <div>
+                  <h2 className="topic-section-heading" style={{ marginBottom: "0.25rem" }}>
+                    <span>
+                      {currentSectionMeta.shortTitle} Problem Ladder ({filteredProblems.length})
+                    </span>
+                  </h2>
+                  <p style={{ fontSize: "0.8125rem", color: "var(--text-secondary)" }}>
+                    Arranged by difficulty ladder. Solve sequentially and mark problems as completed.
+                  </p>
+                </div>
+
+                <div className="problem-tier-tabs" role="tablist">
+                  <button
+                    type="button"
+                    className={`tier-tab-btn ${activeTier === "all" ? "active" : ""}`}
+                    onClick={() => setActiveTier("all")}
+                  >
+                    All ({sectionProblems.length})
+                  </button>
+                  <button
+                    type="button"
+                    className={`tier-tab-btn ${activeTier === "easy" ? "active" : ""}`}
+                    onClick={() => setActiveTier("easy")}
+                  >
+                    Easy ({sectionProblems.filter((p) => p.difficultyTier === "Easy").length})
+                  </button>
+                  <button
+                    type="button"
+                    className={`tier-tab-btn ${activeTier === "medium" ? "active" : ""}`}
+                    onClick={() => setActiveTier("medium")}
+                  >
+                    Medium ({sectionProblems.filter((p) => p.difficultyTier === "Medium").length})
+                  </button>
+                  <button
+                    type="button"
+                    className={`tier-tab-btn ${activeTier === "hard" ? "active" : ""}`}
+                    onClick={() => setActiveTier("hard")}
+                  >
+                    Hard ({sectionProblems.filter((p) => p.difficultyTier === "Hard").length})
+                  </button>
+                </div>
+              </div>
+
+              {/* Problem Items List */}
+              <div className="problem-ladder-list">
+                {filteredProblems.map((prob) => {
+                  const diffClass =
+                    prob.difficultyTier === "Easy"
+                      ? "diff-easy"
+                      : prob.difficultyTier === "Medium"
+                      ? "diff-medium"
+                      : "diff-hard";
+
+                  const isHintOpen = !!openHints[prob.id];
+                  const isDone = !!completedMap[prob.id];
+                  const isSaving = savingId === prob.id;
+
+                  return (
+                    <div
+                      key={prob.id}
+                      className={`problem-row-card ${isDone ? "problem-card-completed" : ""}`}
+                    >
+                      <div className="problem-main-row">
+                        {/* 1. Checkbox Column */}
+                        <button
+                          type="button"
+                          className={`problem-check-btn ${isDone ? "checked" : ""}`}
+                          onClick={() => handleToggleCompleted(prob.id)}
+                          disabled={isSaving}
+                          title={isDone ? "Mark as Incomplete" : "Mark as Completed"}
+                          aria-label={`Mark ${prob.name} as ${isDone ? "incomplete" : "completed"}`}
+                        >
+                          {isDone ? "✓" : ""}
+                        </button>
+
+                        {/* 2. Platform Column */}
+                        <div className="problem-col-platform">
+                          <span className="problem-platform-tag">{prob.platform}</span>
+                        </div>
+
+                        {/* 3. Problem Title Column */}
+                        <div className="problem-col-title">
+                          <span className={`problem-title ${isDone ? "problem-title-done" : ""}`}>
+                            {prob.name}
+                          </span>
+                          {isDone && <span className="problem-done-tag">Solved ✓</span>}
+                        </div>
+
+                        {/* 4. Technique / Tag Column */}
+                        <div className="problem-col-tags">
+                          {prob.tags && prob.tags.length > 0 ? (
+                            prob.tags.map((t, idx) => (
+                              <span key={idx} className="problem-tag-pill" title={t}>
+                                {t}
+                              </span>
+                            ))
+                          ) : (
+                            <span className="problem-tag-empty">—</span>
+                          )}
+                        </div>
+
+                        {/* 5. Difficulty Column */}
+                        <div className="problem-col-difficulty">
+                          <span className={`diff-badge ${diffClass}`}>{prob.difficulty}</span>
+                        </div>
+
+                        {/* 6. Solve Button Column */}
+                        <div className="problem-col-actions">
+                          {prob.editorialUrl && (
+                            <a
+                              href={prob.editorialUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="btn btn-secondary problem-editorial-btn"
+                              style={{ padding: "0.35rem 0.65rem", fontSize: "0.75rem" }}
+                            >
+                              Editorial ↗
+                            </a>
+                          )}
+
+                          <a
+                            href={prob.problemUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-primary problem-solve-btn"
+                            style={{ padding: "0.35rem 0.85rem", fontSize: "0.75rem" }}
+                          >
+                            Solve ↗
+                          </a>
+                        </div>
+                      </div>
+
+                      {prob.hint && (
+                        <div className="problem-hint-toggle">
+                          <button
+                            type="button"
+                            className="hint-btn"
+                            onClick={() => toggleHint(prob.id)}
+                            aria-expanded={isHintOpen}
+                          >
+                            <span>{isHintOpen ? "▼ Hide Hint" : "▶ Need a hint?"}</span>
+                          </button>
+
+                          {isHintOpen && (
+                            <div className="hint-content-box">
+                              <strong>Hint:</strong> {prob.hint}
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* =================================================================
+              Section 4: Core Algorithmic Patterns (CODE TEMPLATES ONLY)
+              ================================================================= */}
+          {activeSection === "core-patterns" && (
+            <div className="core-templates-section">
+              {/* Category Filter Pills */}
+              <div className="template-category-filter" role="tablist" aria-label="Template Categories">
+                {templateCategories.map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    className={`template-category-btn ${activeTemplateCategory === cat ? "active" : ""}`}
+                    onClick={() => setActiveTemplateCategory(cat)}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+
+              {/* Templates List */}
+              <div className="templates-grid">
+                {filteredTemplates.map((tpl) => {
+                  const isCopied = copiedId === tpl.id;
+
+                  return (
+                    <article key={tpl.id} className="template-card">
+                      <div className="template-card-header">
+                        <div className="template-title-wrap">
+                          <span className="template-cat-pill">{tpl.category}</span>
+                          <h4>{tpl.title}</h4>
+                        </div>
+                        <div className="template-complexity-badges">
+                          <span className="complexity-pill" title="Time Complexity">
+                            ⏱ {tpl.timeComplexity}
+                          </span>
+                          <span className="complexity-pill" title="Space Complexity">
+                            💾 {tpl.spaceComplexity}
+                          </span>
+                        </div>
+                      </div>
+
+                      <p className="template-summary">{tpl.summary}</p>
+
+                      <div className="template-when-box">
+                        <strong>When to use:</strong> {tpl.whenToUse}
+                      </div>
+
+                      <div className="template-code-container">
+                        <button
+                          type="button"
+                          className={`template-copy-btn ${isCopied ? "copied" : ""}`}
+                          onClick={() => handleCopyCode(tpl.id, tpl.codeSnippet)}
+                          aria-label={`Copy ${tpl.title} C++ code snippet`}
+                        >
+                          {isCopied ? "Copied! ✓" : "📋 Copy Code"}
+                        </button>
+                        <pre className="concept-code-box">
+                          <code>{tpl.codeSnippet}</code>
+                        </pre>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </section>
 
-        {/* 8: Additional Practice Recommendations */}
+        {/* Additional Practice Recommendations */}
         <section className="topic-page-section">
           <h2 className="topic-section-heading">
             <span>Additional Practice &amp; Next Steps</span>
@@ -486,13 +674,13 @@ export default function TopicOfTheWeekPage({ onBackToHome }) {
       <button
         type="button"
         className="floating-jump-btn"
-        onClick={scrollToProblemSet}
-        title="Scroll down to Problem Ladder"
-        aria-label="Scroll down to Problem Ladder"
+        onClick={() => scrollToSections(activeSection)}
+        title="Scroll down to active section"
+        aria-label="Scroll down to active section"
       >
-        <span>Problem Ladder</span>
+        <span>{currentSectionMeta.shortTitle}</span>
         <span className="floating-jump-badge">
-          {completedCount > 0 ? `${completedCount}/${totalProblems}` : `${totalProblems}Q`}
+          {isProblemSection ? `${sectionCompletedCount}/${sectionProblems.length}` : "Code"}
         </span>
         <span className="floating-jump-arrow">↓</span>
       </button>
