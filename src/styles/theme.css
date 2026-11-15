@@ -72,11 +72,76 @@ a {
   text-decoration: none;
 }
 
+/* Base button reset */
 button {
   font-family: inherit;
   cursor: pointer;
   border: none;
   background: none;
+}
+
+/* ==========================================================================
+   Global Collapsible / Topdown (<details> & <summary>) Flat Box Styling
+   ========================================================================== */
+details {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.875rem;
+  overflow: hidden;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+details:hover {
+  border-color: var(--accent-border);
+}
+
+details:active {
+  border-color: var(--accent-primary);
+}
+
+details[open] {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 16px rgba(34, 197, 94, 0.1), inset 0 0 0 1px rgba(34, 197, 94, 0.15);
+}
+
+details > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1.25rem;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--text-primary);
+  user-select: none;
+  background: transparent;
+  transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+details > summary:hover {
+  background: rgba(34, 197, 94, 0.04);
+  color: var(--accent-primary);
+}
+
+details > summary:active {
+  background: rgba(34, 197, 94, 0.14);
+}
+
+details > summary:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: -2px;
+}
+
+details[open] > summary {
+  background: rgba(34, 197, 94, 0.08);
+  border-bottom: 1px solid var(--accent-border);
+  color: var(--accent-primary);
 }
 
 img {
