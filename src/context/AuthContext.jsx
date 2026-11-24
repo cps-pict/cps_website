@@ -39,7 +39,7 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
-  const signInWithGoogle = async () => {
+  const signInWithGoogle = async (redirectPath) => {
     if (!isSupabaseConfigured) {
       alert(
         "Authentication is currently unavailable because local Supabase credentials are not configured.\n\nThe website is running in guest mode."
@@ -48,10 +48,19 @@ export function AuthProvider({ children }) {
     }
 
     try {
+      const defaultRedirect = new URL("/totw", window.location.origin).toString();
+      const requestedRedirect =
+        typeof redirectPath === "string" && redirectPath.startsWith("/") && !redirectPath.startsWith("//")
+          ? new URL(redirectPath, window.location.origin)
+          : null;
+      const redirectTo = requestedRedirect?.origin === window.location.origin
+        ? requestedRedirect.toString()
+        : defaultRedirect;
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/totw`
+          redirectTo
         }
       });
       if (error) throw error;

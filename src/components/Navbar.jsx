@@ -20,6 +20,11 @@ export default function Navbar() {
     setMobileMenuOpen(false);
   };
 
+  const handleGoogleSignIn = () => {
+    const currentPath = window.location.pathname;
+    signInWithGoogle(currentPath === "/sheet" ? currentPath : undefined);
+  };
+
   const displayName =
     user?.user_metadata?.full_name ||
     user?.user_metadata?.name ||
@@ -93,7 +98,7 @@ export default function Navbar() {
             <button
               type="button"
               className="btn btn-secondary nav-auth-btn nav-google-btn"
-              onClick={signInWithGoogle}
+              onClick={handleGoogleSignIn}
               title="Sign in with your Google account"
             >
               <svg width="15" height="15" viewBox="0 0 24 24" className="google-icon">
@@ -174,7 +179,7 @@ export default function Navbar() {
             type="button"
             className="btn btn-secondary nav-google-btn"
             style={{ width: "100%", justifyContent: "center", marginBottom: "0.5rem" }}
-            onClick={signInWithGoogle}
+            onClick={handleGoogleSignIn}
           >
             <svg width="16" height="16" viewBox="0 0 24 24">
               <path

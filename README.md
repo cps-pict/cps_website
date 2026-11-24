@@ -1,16 +1,35 @@
-# React + Vite
+# CPS Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The CPS (Competitive Programming Society) website for PICT brings together competitive programming learning materials, problem sheets, events and community information.
 
-Currently, two official plugins are available:
+## Run locally
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Requirements: Node.js and npm compatible with the versions in `package-lock.json`.
 
-## React Compiler
+```bash
+npm ci
+npm run dev
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Vite prints a local URL. Optional Supabase configuration is documented in `.env.example`; copy the variable names to `.env` and provide project values to enable Google sign-in and cloud progress. Without configured credentials, the application uses guest behavior and a safe fallback client.
 
-## Expanding the ESLint configuration
+## Useful commands
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm run build    # production build
+npm run lint     # ESLint across the repository
+npm run preview  # preview the built site
+```
+
+There is currently no test script in `package.json`.
+
+## Project context
+
+- [AGENTS.md](AGENTS.md): architecture, conventions and required task workflow.
+- [PROJECT_STATUS.md](PROJECT_STATUS.md): current feature inventory, known issues and next steps.
+- [CHANGELOG.md](CHANGELOG.md): significant implementation history.
+- [docs/DECISIONS.md](docs/DECISIONS.md): decisions and inferred existing conventions.
+- [docs/templates/TASK_HANDOFF.md](docs/templates/TASK_HANDOFF.md): reusable handoff format.
+- [prd.md](prd.md): product requirements draft; it describes proposed scope and is not the source of truth for implemented behavior.
+
+Application source is under `src/`. Route and deployment feature gates are configured in `src/App.jsx` and `src/config/features.js`.

@@ -161,6 +161,9 @@ export default function Footer() {
           <div className="footer-disclaimer">
             Built by CPS PICT • Designed for algorithmic learners
           </div>
+          <div className="footer-bottom-links">
+            <Link to="/resource-disclaimer">Resource Disclaimer</Link>
+          </div>
         </div>
       </div>
     </footer>

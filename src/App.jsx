@@ -13,6 +13,7 @@ import ResourcesPage from "./pages/ResourcesPage";
 import EventsPage from "./pages/EventsPage";
 import AboutPage from "./pages/AboutPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import ResourceDisclaimerPage from "./pages/ResourceDisclaimerPage";
 
 import "./App.css";
 
@@ -52,6 +53,7 @@ function App() {
             />
             <Route path="/sheets" element={<Navigate to="/sheet" replace />} />
             <Route path="/oa-sheet" element={<Navigate to="/sheet" replace />} />
+            <Route path="/resource-disclaimer" element={<ResourceDisclaimerPage />} />
             <Route
               path="/resources"
               element={
