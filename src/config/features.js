@@ -15,7 +15,7 @@ export const deploymentConfig = {
   home: false,
 
   // Must-Try LeetCode & OA Sheet (/sheet, /sheets, /oa-sheet)
-  sheet: false,
+  sheet: true,
 
   // Learning Resources Hub (/resources)
   resources: false,
