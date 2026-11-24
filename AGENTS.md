@@ -19,7 +19,7 @@ CPS is the Competitive Programming Society at Pune Institute of Computer Technol
 - `FeatureGate` reads `deploymentConfig` in `src/config/features.js`. Routes and aliases live in `src/App.jsx`; Vercel's `vercel.json` rewrites paths to `index.html` for SPA navigation/refresh.
 - State is local React state/hooks. Content is mostly imported from static JS modules; do not add a backend or state library for static content without need.
 - Auth is provided once by `src/context/AuthContext.jsx` and consumed through `useAuth()` in `src/context/useAuth.js`. Reuse it; do not create a second auth flow.
-- `src/lib/supabase.js` owns the only Supabase client and a no-op fallback when `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` are missing. Never expose service-role keys. Auth currently uses Google OAuth; its redirect is `/totw`.
+- `src/lib/supabase.js` owns the only Supabase client and a no-op fallback when `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` are missing. Never expose service-role keys. Auth uses Google OAuth; `signInWithGoogle` defaults to `/totw`, but a page may pass a validated same-origin relative path to return to its initiating route. Supabase's allowed redirect URL list must include the local and production callback URLs.
 - `problem_progress` is queried by TOTW and OA Sheet with `user_id`, `problem_id`, and `is_completed`; OA Sheet upserts completions and deletes on uncheck. No schema or migration is present in this repository. Treat live schema, RLS policies and deployed state as unknown until checked in Supabase.
 - No database migrations, API server, or automated test suite are present in the repository at the time of this writing.
 

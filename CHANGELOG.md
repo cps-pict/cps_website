@@ -2,6 +2,34 @@
 
 Significant changes only. Git history remains the authoritative record of commits. New entries are added first.
 
+## 2026-11-25 — Preserve OA Sheet route after Google sign-in
+
+Developer: Not specified
+Feature/Area: Authentication and OA Sheet
+
+### Added
+- OA Sheet prompt and navbar sign-in when on `/sheet` pass the current route to the shared Google sign-in function.
+- Shared auth validates the supplied path and constructs `redirectTo` from the current origin; callers without a route retain the `/totw` fallback.
+
+### Modified
+- Redirect behavior for the OA Sheet prompt now returns users to `/sheet` after OAuth.
+
+### Files affected
+- `src/context/AuthContext.jsx`, `src/pages/OASheetPage.jsx`, `src/components/Navbar.jsx`.
+
+### Database changes
+- None. Supabase redirect URL allow-list configuration may need local and production URLs.
+
+### Technical decisions
+- Kept `/totw` as the default for existing callers and made the originating route an explicit optional argument.
+
+### Verification
+- `npm run build` passed on 2026-11-25.
+- Google OAuth was not executed; Supabase credentials/allowed redirect settings and an interactive browser flow were unavailable.
+
+### Pending
+- Verify the allowed redirect URLs in the Supabase project and manually test sign-in from `/sheet` and an existing page.
+
 ## 2026-11-25 — Shared project context and developer handoff
 
 Developer: Not specified  

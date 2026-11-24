@@ -15,7 +15,7 @@ The application mounts in `src/main.jsx`; routing, shared auth provider, navbar 
 | Topic of the Week | Implemented; integration needs testing | `/totw`, `src/components/TopicOfTheWeekPage.jsx`, `src/data/topicOfTheWeek.js` | Feature gate enabled. Current content focuses on binary search, concepts, resources, problem ladder and templates. Reads/writes `problem_progress` when Supabase is configured. |
 | Must-Try LeetCode / OA Sheet | Implemented; backend needs testing | `/sheet`, aliases `/sheets` and `/oa-sheet`; `src/pages/OASheetPage.jsx`, `src/data/oaSheet.js` | Feature gate enabled. 55 static problems, combined filters/search, expandable hints, guest localStorage progress and Supabase sync/merge code. Browser and live database behavior are unverified. |
 | Resource Disclaimer | Implemented in uncommitted working tree; needs browser check | `/resource-disclaimer`, `src/pages/ResourceDisclaimerPage.jsx` | Direct route, shared footer link and OA Sheet notice exist in source. Content covers provenance and limitations; it is not a privacy policy. No built-in feedback form/contact channel was found. |
-| Google authentication | Implemented; external configuration needs verification | `src/context/AuthContext.jsx`, `src/context/useAuth.js`, `src/lib/supabase.js` | Google OAuth is used when configured. Redirect is currently `/totw`. Otherwise a no-op Supabase client supports guest use. |
+| Google authentication | Implemented; external configuration needs verification | `src/context/AuthContext.jsx`, `src/context/useAuth.js`, `src/lib/supabase.js` | Google OAuth defaults to `/totw`; navbar sign-in from `/sheet` and the OA Sheet sign-in prompt pass the current route. Other routes retain the `/totw` fallback. The redirect URL allow-list and live OAuth flow remain unverified. Otherwise a no-op Supabase client supports guest use. |
 | Problem progress | Partially implemented; deployed schema/RLS unknown | `src/components/TopicOfTheWeekPage.jsx`, `src/pages/OASheetPage.jsx` | Uses table `problem_progress`; OA Sheet also stores guest progress in localStorage. No migrations/schema definitions are checked into this repo. |
 | Learning Resources Hub | Implemented; feature gated off | `/resources`, `src/pages/ResourcesPage.jsx`, `src/data/resources.js` | Gate `resources: false`; contains local roadmaps, platform guides, POTD archive and contest template. |
 | Homepage | Implemented; feature gated off | `/`, `src/pages/HomePage.jsx` and section components/data | Gate `home: false`; renders under-construction view while disabled. |
@@ -32,9 +32,10 @@ The application mounts in `src/main.jsx`; routing, shared auth provider, navbar 
 
 ## 3. Current development status
 
-- Current branch at audit: `feat/oa-sheet`.
-- HEAD at audit: `6114056` (`feat: implement OA problem sheet`); this commit is local in the inspected checkout. No remote feature branch was listed by the inspected Git status/log.
-- The working tree at audit contained uncommitted Resource Disclaimer changes: `src/App.jsx`, `src/components/Footer.jsx`, `src/pages/OASheetPage.jsx`, `src/styles/sections.css`, `src/pages/ResourceDisclaimerPage.jsx`, plus `AGENTS.md`. Documentation files in this update are also uncommitted until the developer chooses to commit.
+- Current branch at audit: `feat/oa-sheet`, tracking `origin/feat/oa-sheet`.
+- HEAD at audit: `a1925a7` (`docs: add project handoff documentation`), also present on `origin/feat/oa-sheet` at inspection.
+- The working tree contains uncommitted Resource Disclaimer changes in `src/App.jsx`, `src/components/Footer.jsx`, `src/pages/OASheetPage.jsx`, `src/styles/sections.css`, and `src/pages/ResourceDisclaimerPage.jsx`.
+- Current redirect work changes `src/context/AuthContext.jsx`, the OA Sheet sign-in prompt in `src/pages/OASheetPage.jsx`, and navbar sign-in handling in `src/components/Navbar.jsx`. This task also updates `AGENTS.md`, `CHANGELOG.md`, `PROJECT_STATUS.md` and `docs/DECISIONS.md`; these changes are uncommitted. Preserve them unless the developer directs otherwise.
 - The disclaimer implementation had a successful `npm run build` and targeted ESLint check during its implementation. No browser visual check was performed.
 - Do not infer an assigned owner or other active feature work from this snapshot.
 
@@ -44,6 +45,7 @@ The application mounts in `src/main.jsx`; routing, shared auth provider, navbar 
 |---|---|---|
 | Full repository lint fails with six errors | `TopicOfTheWeekPage.jsx` (five unused declarations/prop) and `AuthContext.jsx` (React hooks lint rule); severity not assessed | Confirmed by `npm run lint` on 2026-11-25. Fixes were outside the documentation task scope. |
 | Supabase database schema and RLS are not in the repo | Progress/auth; backend dependency | Table usage is visible in source, but live schema, policies, OAuth provider settings and deployed state are unknown. Check Supabase project before relying on account progress. |
+| Supabase OAuth redirect allow-list is unknown | Google sign-in | The application now requests the initiating OA Sheet URL using `window.location.origin`; Supabase must allow the local development URL and production URL. External configuration and end-to-end OAuth are not verified. |
 | OA Sheet and Resource Disclaimer lack browser verification in this checkout | UI/routes | Build and targeted static checks passed for the disclaimer work; layout/refresh/interactions need manual browser inspection. |
 | No app-level feedback or contribution mechanism found | Resource corrections | Disclaimer points students to CPS administrators/community contribution channels without inventing contact details. Add a concrete channel only when the project supplies one. |
 | No automated test script | Package scripts | `package.json` has build, lint, dev and preview; no `test` or typecheck script. |
@@ -72,12 +74,13 @@ The application mounts in `src/main.jsx`; routing, shared auth provider, navbar 
 
 ## 8. Next recommended steps
 
-1. Review and commit the current Resource Disclaimer plus documentation changes on the intended feature branch; push/create a PR using an authenticated GitHub client.
-2. Manually inspect `/sheet`, `/resource-disclaimer`, and `/totw` at desktop/mobile widths and test direct refresh/navigation.
-3. Verify the live `problem_progress` schema, unique constraint, RLS, Google OAuth provider and redirect URI with the backend owner.
-4. Resolve the six existing full-lint errors or track them separately, then rerun `npm run lint`.
-5. Add a concrete feedback/correction channel only after CPS provides the appropriate destination.
+1. Verify local and production callback URLs are allowed in Supabase, then test Google sign-in initiated from `/sheet` and from other pages.
+2. Review and commit the current Resource Disclaimer plus redirect changes on the intended feature branch; push/create a PR using an authenticated GitHub client.
+3. Manually inspect `/sheet`, `/resource-disclaimer`, and `/totw` at desktop/mobile widths and test direct refresh/navigation.
+4. Verify the live `problem_progress` schema, unique constraint, RLS, and Google OAuth provider with the backend owner.
+5. Resolve the six existing full-lint errors or track them separately, then rerun `npm run lint`.
+6. Add a concrete feedback/correction channel only after CPS provides the appropriate destination.
 
 ## 9. Verification record
 
-For the Resource Disclaimer implementation, `npm run build`, ESLint on changed React modules and `git diff --check` passed on 2026-11-24 (per task output). Full `npm run lint` was run on 2026-11-25 and failed with the six errors above. This documentation update was followed by a successful `npm run build`, internal Markdown link check (six files), and `git diff --check` on 2026-11-25. No browser or live Supabase verification was performed.
+For the Resource Disclaimer implementation, `npm run build`, ESLint on changed React modules and `git diff --check` passed on 2026-11-24 (per task output). Full `npm run lint` was run on 2026-11-25 and failed with the six errors above. Documentation build and link checks passed on 2026-11-25. The OAuth redirect change passed `npm run build` on 2026-11-25; Google OAuth was not executed because this environment has no configured project credentials/browser flow. No live Supabase configuration was inspected.

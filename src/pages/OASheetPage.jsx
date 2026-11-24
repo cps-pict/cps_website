@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 import { supabase, isSupabaseConfigured } from "../lib/supabase";
 import { oaProblems, oaCompanies, oaTopics } from "../data/oaSheet";
@@ -164,7 +165,7 @@ export default function OASheetPage() {
         </section>
 
         {(syncError || (user && loadedUserId !== user.id)) && <p className="sheet-notice" role="status">{syncError || "Loading and syncing your saved progress…"}</p>}
-        {signInPrompt && !user && <div className="sheet-signin-prompt" role="dialog" aria-label="Choose progress mode"><div><strong>Save your progress</strong><p>Sign in with Google to sync across devices, or continue as a guest on this browser.</p></div><button className="btn btn-primary" type="button" onClick={signInWithGoogle}>Sign in with Google</button><button className="btn btn-secondary" type="button" onClick={() => setSignInPrompt(false)}>Continue in guest mode</button></div>}
+        {signInPrompt && !user && <div className="sheet-signin-prompt" role="dialog" aria-label="Choose progress mode"><div><strong>Save your progress</strong><p>Sign in with Google to sync across devices, or continue as a guest on this browser.</p></div><button className="btn btn-primary" type="button" onClick={() => signInWithGoogle(window.location.pathname)}>Sign in with Google</button><button className="btn btn-secondary" type="button" onClick={() => setSignInPrompt(false)}>Continue in guest mode</button></div>}
 
         <section className="sheet-controls-section" aria-label="Problem filters">
           <label className="sheet-search-wrap"><span className="sr-only">Search problems</span><span className="sheet-search-icon" aria-hidden="true">⌕</span><input className="sheet-search-input" type="search" placeholder="Search problems, platform, company, topic or idea…" value={query} onChange={(event) => setQuery(event.target.value)} /></label>
@@ -182,6 +183,11 @@ export default function OASheetPage() {
             <div className="problem-action-links"><a href={problem.problemUrl} target="_blank" rel="noopener noreferrer" className="problem-action-btn">Solve ↗</a><a href={problem.editorialUrl} target="_blank" rel="noopener noreferrer" className="problem-editorial-btn">Editorial ↗</a></div>
           </article>)}</div>}
         </section>
+        <p className="sheet-resource-disclaimer">
+          Interview questions and company experiences are based on student-reported information and word of mouth.
+          CPS does not guarantee their accuracy or that these questions will appear in future interviews. Resources
+          are provided for educational purposes only. <Link to="/resource-disclaimer">Read full resource disclaimer</Link>
+        </p>
         {toast && <div className="sheet-toast" role="status">{toast}</div>}
       </div>
     </div>

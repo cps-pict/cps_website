@@ -1679,6 +1679,29 @@
   .sheet-problem-meta { gap: .4rem; }
 }
 
+.sheet-resource-disclaimer {
+  max-width: 920px;
+  margin: 1.5rem auto 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: .8rem;
+  line-height: 1.6;
+}
+.sheet-resource-disclaimer a { color: var(--text-secondary); text-decoration: underline; text-underline-offset: 2px; }
+.sheet-resource-disclaimer a:hover { color: var(--accent-primary); }
+.resource-disclaimer-container { max-width: 900px; }
+.resource-disclaimer-page .topic-page-header { margin-bottom: 1.75rem; }
+.resource-disclaimer-sections { display: grid; gap: .85rem; }
+.resource-disclaimer-section { padding: 1.1rem 1.25rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); }
+.resource-disclaimer-section h2 { margin-bottom: .4rem; color: var(--text-primary); font: 600 1.05rem var(--font-heading); }
+.resource-disclaimer-section p { color: var(--text-secondary); font-size: .9rem; line-height: 1.7; }
+@media (max-width: 640px) {
+  .resource-disclaimer-section { padding: .9rem 1rem; }
+  .resource-disclaimer-section h2 { font-size: 1rem; }
+  .resource-disclaimer-section p { font-size: .85rem; }
+}
+
 /* 4. Resources Roadmaps Section */
 .roadmap-tabs-container {
   display: flex;

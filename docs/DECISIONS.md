@@ -26,10 +26,10 @@ This register captures important existing patterns. Where original discussion is
 
 - **Recorded:** 2026-11-25; original decision date unknown.
 - **Context:** Optional authentication and cloud progress need to be shared by pages.
-- **Decision:** Create the client in `src/lib/supabase.js`, provide auth through `AuthProvider`, and consume it through `useAuth()`. Use a no-op fallback when environment config is absent.
+- **Decision:** Create the client in `src/lib/supabase.js`, provide auth through `AuthProvider`, and consume it through `useAuth()`. Use a no-op fallback when environment config is absent. Google sign-in defaults to `/totw`; an initiating page or navbar may supply a validated same-origin relative path to return to that route.
 - **Reasoning:** Inferred from the architecture; original rationale undocumented. Fallback behavior is explicit in source comments.
 - **Alternatives:** Not recorded.
-- **Consequences:** Keep one client and avoid duplicate auth flows. Real persistence depends on Supabase project configuration.
+- **Consequences:** Keep one client and avoid duplicate auth flows. Real persistence and accepted OAuth redirect URLs depend on Supabase project configuration.
 - **Affected:** `src/lib/supabase.js`, `src/context/AuthContext.jsx`, `src/context/useAuth.js`.
 
 ## D-004 — Problem progress uses `problem_progress`; OA guests use localStorage
